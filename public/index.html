@@ -1,0 +1,2312 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="night">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta property="og:title" content="Mio Media - Share Your Moment" />
+<meta property="og:description" content="✨ Social media platform untuk berbagi foto, video, musik, dan temukan teman baru!" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://mio-media.my.id/" />
+<meta property="og:image" content="https://c.termai.cc/i138/ohXk.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Mio Media - Social Media Platform" />
+<meta property="og:site_name" content="Mio Media" />
+<meta property="og:locale" content="id_ID" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Mio Media - Share Your Moment" />
+<meta name="twitter:description" content="Bagikan momen terbaikmu di Mio Media!" />
+<meta name="twitter:image" content="https://c.termai.cc/i138/ohXk.jpg" />
+<link rel="icon" type="image/x-icon" href="https://c.termai.cc/i153/caFGKy.jpg">
+<link rel="shortcut icon" type="image/x-icon" href="https://c.termai.cc/i153/caFGKy.jpg">
+<link rel="apple-touch-icon" href="https://c.termai.cc/i153/caFGKy.jpg">
+<title>Mio Media - Share Your Moment</title>
+<style>
+/* ═══════════════════════════════════════════════
+   PERFORMANCE: deteksi low-end device
+   Jika prefers-reduced-motion aktif → matikan animasi berat
+═══════════════════════════════════════════════ */
+:root {
+  --tr: .3s ease;
+  --tr-theme: .6s ease; /* dipercepat dari 1.8s */
+
+  /* NIGHT */
+  --sky-top:#000005;--sky-bot:#07072e;
+  --card-bg:rgba(12,10,38,0.82);
+  --card-border:rgba(139,92,246,0.22);
+  --card-shadow:0 4px 20px rgba(0,0,0,0.5);
+  --blur:blur(10px); /* dikurangi dari 18px */
+  --text-primary:#f0edff;--text-secondary:#b8b0e0;--text-tertiary:#7b72a8;
+  --accent:#a78bfa;--accent2:#38bdf8;--accent3:#f472b6;
+  --accent-glow:rgba(167,139,250,0.3);
+  --btn-primary:linear-gradient(135deg,#7c3aed,#a855f7,#38bdf8);
+  --btn-danger:linear-gradient(135deg,#dc2626,#ef4444);
+  --btn-success:linear-gradient(135deg,#059669,#10b981);
+  --input-bg:rgba(15,10,50,0.65);
+  --input-border:rgba(139,92,246,0.3);
+  --input-focus:rgba(167,139,250,0.45);
+  --nav-bg:rgba(4,3,20,0.94);
+  --header-bg:rgba(4,3,20,0.92);
+  --border-color:rgba(139,92,246,0.18);
+  --like-color:#f472b6;--verified-bg:#38bdf8;
+  --music-color:#4ade80;--danger:#ef4444;
+  --success:#10b981;--warning:#f59e0b;
+  --chat-me:linear-gradient(135deg,#7c3aed,#a855f7);
+  --chat-them:rgba(30,20,70,0.8);
+  --chat-me-text:#fff;--chat-them-text:#f0edff;
+}
+[data-theme="day"] {
+  --sky-top:#a8d8f0;--sky-bot:#e8f4fc;
+  --card-bg:rgba(255,255,255,0.82);
+  --card-border:rgba(124,58,237,0.15);
+  --card-shadow:0 4px 20px rgba(100,80,200,0.1);
+  --text-primary:#1e1540;--text-secondary:#4c3d8a;--text-tertiary:#8b7cb5;
+  --accent:#7c3aed;--accent2:#0ea5e9;--accent3:#db2777;
+  --accent-glow:rgba(124,58,237,0.2);
+  --btn-primary:linear-gradient(135deg,#7c3aed,#a855f7,#0ea5e9);
+  --input-bg:rgba(255,255,255,0.8);
+  --input-border:rgba(124,58,237,0.25);
+  --input-focus:rgba(124,58,237,0.3);
+  --nav-bg:rgba(255,255,255,0.92);
+  --header-bg:rgba(255,255,255,0.88);
+  --border-color:rgba(124,58,237,0.12);
+  --chat-me:linear-gradient(135deg,#7c3aed,#6d28d9);
+  --chat-them:rgba(240,235,255,0.9);
+  --chat-them-text:#1e1540;
+}
+
+/* Matikan animasi berat jika user minta reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after { animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  #meteorCanvas,#starsLayer,#rainCanvas { display:none !important; }
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif;background:transparent}
+
+/* ── SKY BACKGROUND ── */
+#skyCanvas{
+  position:fixed;inset:0;width:100%;height:100%;z-index:0;
+  background:linear-gradient(180deg,#000005 0%,#04041a 50%,#07072e 100%);
+  transition:background var(--tr-theme);
+  /* GPU layer */
+  will-change:background;
+  transform:translateZ(0);
+}
+[data-theme="day"] #skyCanvas{
+  background:linear-gradient(180deg,#a8d8f0 0%,#c9e8f7 50%,#e8f4fc 100%);
+}
+
+/* ── STAR LAYER ── */
+#starsLayer{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  opacity:1;transition:opacity var(--tr-theme);
+  will-change:opacity;
+}
+[data-theme="day"] #starsLayer{opacity:0}
+
+/* ── METEOR ── */
+#meteorCanvas{
+  position:fixed;inset:0;z-index:2;pointer-events:none;
+  opacity:1;transition:opacity var(--tr-theme);
+  will-change:opacity;
+}
+[data-theme="day"] #meteorCanvas{opacity:0}
+
+/* ── MOON ── */
+.moon{
+  position:fixed;top:60px;right:60px;z-index:3;
+  width:64px;height:64px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 35% 35%,#fff9e6,#f5e6a3,#d4b84a);
+  box-shadow:0 0 25px rgba(245,230,160,0.5),0 0 50px rgba(245,230,160,0.2);
+  opacity:1;transition:opacity var(--tr-theme),transform var(--tr-theme);
+  animation:moonFloat 8s ease-in-out infinite;
+  will-change:transform;
+}
+[data-theme="day"] .moon{opacity:0;transform:translateY(-20px)}
+@keyframes moonFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.moon::before{
+  content:'';position:absolute;top:18px;left:12px;
+  width:12px;height:12px;border-radius:50%;
+  background:rgba(180,140,30,0.35);
+  box-shadow:18px 14px 0 7px rgba(180,140,30,0.2),7px 28px 0 3px rgba(180,140,30,0.15);
+}
+
+/* ── SUN ── */
+.sun{
+  position:fixed;top:50px;right:70px;z-index:3;
+  width:74px;height:74px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,#fff7a0,#ffd700,#ff8c00);
+  box-shadow:0 0 35px rgba(255,200,0,0.7),0 0 70px rgba(255,150,0,0.4);
+  opacity:0;transition:opacity var(--tr-theme),transform var(--tr-theme);
+  transform:translateY(-20px);
+  animation:sunFloat 10s ease-in-out infinite;
+  will-change:transform;
+}
+[data-theme="day"] .sun{opacity:1;transform:translateY(0)}
+@keyframes sunFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+/* Ray animasi ringan — hanya 1 pseudo elemen, bukan 2 */
+.sun::before{
+  content:'';position:absolute;inset:-28px;border-radius:50%;
+  background:conic-gradient(
+    from 0deg,transparent 0deg,rgba(255,200,0,.12) 10deg,transparent 20deg,
+    rgba(255,200,0,.12) 30deg,transparent 40deg,rgba(255,200,0,.12) 50deg,transparent 60deg,
+    rgba(255,200,0,.12) 70deg,transparent 80deg,rgba(255,200,0,.12) 90deg,transparent 100deg,
+    rgba(255,200,0,.12) 110deg,transparent 120deg,rgba(255,200,0,.12) 130deg,transparent 140deg,
+    rgba(255,200,0,.12) 150deg,transparent 160deg,rgba(255,200,0,.12) 170deg,transparent 180deg,
+    rgba(255,200,0,.12) 190deg,transparent 200deg,rgba(255,200,0,.12) 210deg,transparent 220deg,
+    rgba(255,200,0,.12) 230deg,transparent 240deg,rgba(255,200,0,.12) 250deg,transparent 260deg,
+    rgba(255,200,0,.12) 270deg,transparent 280deg,rgba(255,200,0,.12) 290deg,transparent 300deg,
+    rgba(255,200,0,.12) 310deg,transparent 320deg,rgba(255,200,0,.12) 330deg,transparent 340deg,
+    rgba(255,200,0,.12) 350deg,transparent 360deg
+  );
+  animation:sunRays 15s linear infinite;
+  will-change:transform;
+}
+@keyframes sunRays{to{transform:rotate(360deg)}}
+
+/* ── CLOUDS (CSS only, no canvas) ── */
+.clouds-layer{
+  position:fixed;inset:0;z-index:3;pointer-events:none;
+  opacity:0;transition:opacity var(--tr-theme);
+}
+[data-theme="day"] .clouds-layer{opacity:1}
+.cloud{
+  position:absolute;border-radius:50px;
+  background:rgba(255,255,255,0.82);
+  filter:blur(1px);
+  animation:cloudDrift linear infinite;
+  will-change:transform;
+}
+.cloud::before,.cloud::after{content:'';position:absolute;background:inherit;border-radius:50%}
+.cloud-1{width:170px;height:52px;top:12%;left:-200px;animation-duration:50s;animation-delay:-8s}
+.cloud-1::before{width:75px;height:65px;top:-28px;left:28px}
+.cloud-1::after{width:55px;height:50px;top:-18px;left:85px}
+.cloud-2{width:120px;height:36px;top:22%;left:-150px;animation-duration:65s;animation-delay:-22s;opacity:.65}
+.cloud-2::before{width:55px;height:50px;top:-22px;left:18px}
+.cloud-2::after{width:45px;height:36px;top:-12px;left:60px}
+.cloud-3{width:200px;height:60px;top:8%;left:-240px;animation-duration:80s;animation-delay:-38s;opacity:.55}
+.cloud-3::before{width:90px;height:78px;top:-35px;left:38px}
+.cloud-3::after{width:70px;height:60px;top:-22px;left:105px}
+@keyframes cloudDrift{from{transform:translateX(0)}to{transform:translateX(calc(100vw + 300px))}}
+
+/* ── RAIN LAYER ── */
+.rain-layer{
+  position:fixed;inset:0;z-index:4;pointer-events:none;
+  opacity:0;transition:opacity var(--tr-theme);overflow:hidden;
+}
+[data-theme="day"] .rain-layer{opacity:1}
+#rainCanvas{position:absolute;inset:0;width:100%;height:100%}
+
+/* ── AURORA (night) ── */
+.aurora{
+  position:fixed;bottom:0;left:0;right:0;height:30%;z-index:2;pointer-events:none;
+  background:linear-gradient(to top,rgba(16,185,129,.05) 0%,rgba(167,139,250,.03) 50%,transparent 100%);
+  opacity:1;transition:opacity var(--tr-theme);
+  animation:auroraShift 18s ease-in-out infinite;
+}
+[data-theme="day"] .aurora{opacity:0}
+@keyframes auroraShift{
+  0%,100%{opacity:.8}50%{opacity:1}
+}
+
+/* ══════════════════════════════════
+   TOAST
+══════════════════════════════════ */
+.toast-wrap{position:fixed;top:16px;right:16px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+.toast{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border-radius:16px;padding:12px 16px;
+  display:flex;align-items:center;gap:10px;
+  font-size:13px;font-weight:600;color:var(--text-primary);max-width:300px;pointer-events:all;
+  box-shadow:var(--card-shadow);
+  animation:toastIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+.toast.success{border-color:rgba(16,185,129,.4)}
+.toast.error{border-color:rgba(239,68,68,.4)}
+.toast.warning{border-color:rgba(245,158,11,.4)}
+.toast-close{background:none;border:none;cursor:pointer;color:var(--text-tertiary);font-size:16px;margin-left:auto}
+@keyframes toastIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateX(24px)}}
+
+/* ══════════════════════════════════
+   LOADING
+══════════════════════════════════ */
+.loading-overlay{
+  position:fixed;inset:0;z-index:9998;
+  background:rgba(0,0,0,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;transition:.25s;
+}
+.loading-overlay.active{opacity:1;visibility:visible}
+.loader-ring{
+  width:48px;height:48px;border-radius:50%;
+  border:3px solid rgba(167,139,250,.2);
+  border-top-color:var(--accent);border-right-color:var(--accent2);
+  animation:spin .9s linear infinite;
+  will-change:transform;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ══════════════════════════════════
+   APP SHELL
+══════════════════════════════════ */
+#app{position:relative;z-index:10;width:100%;height:100%;display:flex;flex-direction:column;background:transparent}
+
+/* ══════════════════════════════════
+   HEADER
+══════════════════════════════════ */
+header{
+  background:var(--header-bg);
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border-bottom:1px solid var(--border-color);
+  padding:10px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;position:relative;z-index:100;
+  transition:background var(--tr-theme),border-color var(--tr-theme);
+}
+.logo{
+  font-family:'Orbitron',monospace;font-size:19px;font-weight:900;letter-spacing:2px;
+  background:var(--btn-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  cursor:pointer;
+}
+.header-right{display:flex;align-items:center;gap:10px}
+.avatar-sm{
+  width:36px;height:36px;border-radius:50%;object-fit:cover;
+  border:2px solid var(--accent);cursor:pointer;transition:var(--tr);
+}
+.avatar-sm:hover{transform:scale(1.08)}
+
+/* Theme toggle */
+.theme-btn{
+  position:relative;width:58px;height:30px;
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:18px;cursor:pointer;transition:var(--tr);
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);overflow:hidden;
+}
+.theme-btn-knob{
+  position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;
+  background:linear-gradient(135deg,#ffd700,#ff8c00);
+  transition:.35s cubic-bezier(.34,1.56,.64,1);
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+  will-change:left;
+}
+[data-theme="night"] .theme-btn-knob{left:31px;background:linear-gradient(135deg,#a78bfa,#38bdf8)}
+.theme-btn-day,.theme-btn-night{position:absolute;top:50%;transform:translateY(-50%);font-size:12px;transition:opacity .25s}
+.theme-btn-day{left:6px}
+.theme-btn-night{right:6px}
+[data-theme="day"] .theme-btn-night{opacity:0}
+[data-theme="night"] .theme-btn-day{opacity:0}
+
+.logout-btn{
+  padding:5px 14px;border-radius:28px;border:1px solid var(--accent);
+  background:transparent;color:var(--accent);font-family:'Nunito',sans-serif;
+  font-size:12px;font-weight:700;cursor:pointer;transition:var(--tr);
+}
+.logout-btn:hover{background:var(--accent);color:#fff}
+
+/* ══════════════════════════════════
+   MAIN
+══════════════════════════════════ */
+main{
+  flex:1;overflow-y:auto;overflow-x:hidden;padding:14px;
+  -webkit-overflow-scrolling:touch;
+}
+main::-webkit-scrollbar{width:3px}
+main::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
+
+/* ══════════════════════════════════
+   BOTTOM NAV
+══════════════════════════════════ */
+.bottom-nav{
+  display:flex;background:var(--nav-bg);
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border-top:1px solid var(--border-color);
+  padding:6px 0 calc(env(safe-area-inset-bottom,0px) + 6px);
+  justify-content:space-around;flex-shrink:0;
+  position:relative;z-index:100;
+  transition:background var(--tr-theme),border-color var(--tr-theme);
+}
+.nav-btn{
+  background:none;border:none;font-size:20px;padding:6px 14px;
+  border-radius:36px;color:var(--text-tertiary);cursor:pointer;
+  transition:var(--tr);position:relative;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.nav-btn span{font-size:9px;font-weight:700;letter-spacing:.4px;color:inherit}
+.nav-btn.active{color:var(--accent)}
+.nav-btn.active::before{
+  content:'';position:absolute;top:-2px;left:50%;transform:translateX(-50%);
+  width:28px;height:3px;border-radius:3px;background:var(--accent);
+}
+.nav-badge{
+  position:absolute;top:1px;right:5px;
+  background:#ef4444;color:#fff;font-size:9px;font-weight:800;
+  min-width:16px;height:16px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;padding:0 3px;
+  border:2px solid var(--nav-bg);
+}
+
+/* ══════════════════════════════════
+   GLASS CARD
+══════════════════════════════════ */
+.glass{
+  background:var(--card-bg);
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border:1px solid var(--card-border);
+  border-radius:20px;
+  box-shadow:var(--card-shadow);
+  transition:background var(--tr-theme),border-color var(--tr-theme);
+}
+
+/* ══════════════════════════════════
+   BUTTONS
+══════════════════════════════════ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:10px 20px;border-radius:28px;border:none;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;
+  transition:var(--tr);letter-spacing:.4px;
+}
+.btn-primary{background:var(--btn-primary);color:#fff}
+.btn-primary:hover{transform:scale(1.03)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-ghost{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+.btn-ghost:hover{background:var(--accent);color:#fff}
+.btn-danger{background:var(--btn-danger);color:#fff}
+.btn-success{background:var(--btn-success);color:#fff}
+.btn-sm{padding:6px 14px;font-size:12px}
+
+/* ══════════════════════════════════
+   INPUTS
+══════════════════════════════════ */
+.inp{
+  width:100%;padding:12px 16px;border-radius:14px;
+  background:var(--input-bg);color:var(--text-primary);
+  border:1px solid var(--input-border);
+  font-family:'Nunito',sans-serif;font-size:14px;font-weight:500;
+  outline:none;transition:border-color .2s,box-shadow .2s,background var(--tr-theme),color var(--tr-theme);
+}
+.inp:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-glow)}
+.inp::placeholder{color:var(--text-tertiary)}
+textarea.inp{resize:none}
+.field-err{color:var(--danger);font-size:12px;font-weight:600;padding:3px 5px;display:none}
+.field-err.show{display:block}
+
+/* ══════════════════════════════════
+   AUTH
+══════════════════════════════════ */
+.auth-wrap{max-width:400px;margin:24px auto}
+.auth-logo-big{text-align:center;margin-bottom:24px}
+.auth-logo-big h1{
+  font-family:'Orbitron',monospace;font-size:26px;font-weight:900;letter-spacing:3px;
+  background:var(--btn-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:6px;
+}
+.auth-logo-big p{color:var(--text-secondary);font-size:13px}
+.auth-box{padding:28px 24px}
+.auth-box h2{font-family:'Orbitron',monospace;font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:20px;text-align:center;letter-spacing:1px}
+.auth-field{margin-bottom:14px}
+.auth-field label{display:block;font-size:12px;font-weight:700;color:var(--text-secondary);margin-bottom:6px;letter-spacing:.4px}
+.auth-toggle{text-align:center;margin-top:18px;color:var(--accent);font-weight:700;cursor:pointer;font-size:13px;transition:var(--tr)}
+.auth-remember{display:flex;align-items:center;gap:8px;margin:10px 0;color:var(--text-secondary);font-size:13px;font-weight:600;cursor:pointer}
+.auth-remember input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
+
+/* ══════════════════════════════════
+   BADGES
+══════════════════════════════════ */
+.vbadge{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:18px;border-radius:50%;
+  background:linear-gradient(135deg,#38bdf8,#0ea5e9);
+  color:#fff;font-size:10px;font-weight:900;margin-left:4px;flex-shrink:0;
+  animation:vPulse 3s ease-in-out infinite;cursor:default;
+}
+@keyframes vPulse{0%,100%{box-shadow:0 0 8px rgba(56,189,248,.4)}50%{box-shadow:0 0 14px rgba(56,189,248,.7)}}
+.abadge{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:2px 8px;border-radius:18px;margin-left:5px;
+  background:linear-gradient(135deg,#f472b6,#a855f7);color:#fff;
+  font-size:10px;font-weight:800;letter-spacing:.4px;
+}
+.cbadge{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:2px 8px;border-radius:18px;font-size:10px;font-weight:700;margin-left:3px;
+}
+
+/* ══════════════════════════════════
+   POST CARD
+══════════════════════════════════ */
+.feed-wrap{max-width:580px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.post-card{overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.post-card:hover{transform:translateY(-2px)}
+.post-head{padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:.15s}
+.post-head:hover{background:rgba(167,139,250,.04)}
+.post-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);flex-shrink:0}
+.post-uname{font-weight:800;font-size:14px;color:var(--text-primary);display:flex;align-items:center;flex-wrap:wrap;gap:3px}
+.post-time{font-size:11px;color:var(--text-tertiary);margin-top:1px}
+.following-chip{font-size:9px;font-weight:700;color:var(--accent2);background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.25);padding:2px 7px;border-radius:9px}
+.post-media-wrap{width:100%;background:#000;position:relative;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.post-media-wrap::-webkit-scrollbar{display:none}
+.media-slide{flex:0 0 100%;scroll-snap-align:start;position:relative}
+.post-img,.post-vid{width:100%;max-height:440px;object-fit:contain;display:block}
+.media-counter{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.6);color:#fff;padding:3px 10px;border-radius:18px;font-size:11px;font-weight:700}
+.media-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;background:rgba(0,0,0,.35);padding:5px 10px;border-radius:18px}
+.mdot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer;transition:.25s}
+.mdot.active{width:18px;border-radius:9px;background:var(--accent)}
+.music-pill{
+  position:absolute;bottom:44px;right:10px;
+  background:rgba(0,0,0,.7);color:var(--music-color);
+  padding:5px 12px;border-radius:28px;font-size:11px;font-weight:700;
+  display:flex;align-items:center;gap:5px;cursor:pointer;
+  border:1px solid var(--music-color);transition:var(--tr);
+}
+.music-pill:hover{background:var(--music-color);color:#000}
+.post-caption{padding:10px 14px;font-size:13px;color:var(--text-primary);line-height:1.5}
+.post-actions{padding:8px 14px;border-top:1px solid var(--border-color);display:flex;gap:5px}
+.action-btn{
+  background:none;border:none;cursor:pointer;color:var(--text-secondary);
+  padding:6px 12px;border-radius:18px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;
+  display:flex;align-items:center;gap:5px;transition:var(--tr);
+}
+.action-btn:hover{background:rgba(167,139,250,.08);color:var(--accent)}
+.action-btn.liked{color:var(--like-color)}
+
+/* ══════════════════════════════════
+   EXPLORE
+══════════════════════════════════ */
+.explore-wrap{max-width:580px;margin:0 auto}
+.search-box{padding:14px;margin-bottom:14px}
+.explore-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.exp-item{aspect-ratio:1;background:#000;overflow:hidden;cursor:pointer;position:relative;border-radius:12px;transition:transform .2s}
+.exp-item:hover{transform:scale(1.03);z-index:2}
+.exp-item img,.exp-item video{width:100%;height:100%;object-fit:cover}
+.exp-badge{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.65);color:#fff;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700}
+
+/* ══════════════════════════════════
+   SEARCH
+══════════════════════════════════ */
+.search-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.search-item{display:flex;align-items:center;gap:12px;padding:12px;cursor:pointer;transition:.2s}
+.search-item:hover{transform:translateX(5px);background:rgba(167,139,250,.05)}
+.search-item img{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);flex-shrink:0}
+.search-item strong{font-size:14px;color:var(--text-primary);display:flex;align-items:center;flex-wrap:wrap;gap:3px}
+.search-item small{font-size:11px;color:var(--text-tertiary);margin-top:2px;display:block}
+
+/* ══════════════════════════════════
+   PROFILE
+══════════════════════════════════ */
+.profile-wrap{max-width:580px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.profile-card{overflow:hidden}
+.profile-wall{height:150px;position:relative;overflow:hidden}
+.profile-wall video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.profile-body{
+  padding:0 18px 18px;display:flex;flex-direction:column;align-items:center;text-align:center;
+  background:linear-gradient(to bottom,transparent,var(--card-bg) 22%);
+  position:relative;z-index:2;
+}
+.profile-ava-wrap{position:relative;display:inline-block;margin-top:-44px}
+.profile-ava{width:86px;height:86px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);box-shadow:0 0 18px var(--accent-glow),0 4px 16px rgba(0,0,0,.4)}
+.profile-vsticker{position:absolute;bottom:0;right:0;width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#38bdf8,#0ea5e9);border:2px solid var(--card-bg);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:900;animation:vPulse 3s ease-in-out infinite}
+.profile-name-row{display:flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:3px;margin-top:8px}
+.profile-uname{font-family:'Orbitron',monospace;font-size:18px;font-weight:700;color:var(--text-primary)}
+.profile-bio{color:var(--text-secondary);font-size:13px;margin:6px 0;max-width:300px;line-height:1.5}
+.level-bar-wrap{background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.18);border-radius:28px;padding:8px 16px;margin:8px 0;width:100%;max-width:240px}
+.level-bar-top{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--text-secondary);margin-bottom:5px}
+.level-track{height:7px;background:rgba(255,255,255,.08);border-radius:6px;overflow:hidden}
+.level-fill{height:100%;background:var(--btn-primary);border-radius:6px;transition:width .6s ease}
+.profile-stats{display:flex;justify-content:center;gap:8px;margin:12px 0;flex-wrap:wrap}
+.stat-chip{display:flex;flex-direction:column;align-items:center;padding:8px 16px;border-radius:18px;background:rgba(167,139,250,.07);border:1px solid var(--border-color);cursor:pointer;transition:var(--tr)}
+.stat-chip:hover{background:rgba(167,139,250,.13);transform:translateY(-1px)}
+.stat-num{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:var(--text-primary)}
+.stat-lbl{font-size:10px;color:var(--text-tertiary);font-weight:700;margin-top:1px}
+.profile-btns{display:flex;gap:8px;margin-top:4px;width:100%;max-width:280px}
+.posts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.grid-item{aspect-ratio:1;overflow:hidden;cursor:pointer;position:relative;border-radius:12px;transition:transform .2s;background:#000}
+.grid-item:hover{transform:scale(1.04);z-index:2}
+.grid-item img,.grid-item video{width:100%;height:100%;object-fit:cover}
+
+/* ══════════════════════════════════
+   UPLOAD
+══════════════════════════════════ */
+.upload-wrap{max-width:500px;margin:0 auto}
+.upload-box{padding:24px}
+.upload-box h2{font-family:'Orbitron',monospace;font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.drop-zone{border:2px dashed var(--accent);border-radius:16px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:var(--tr);background:rgba(167,139,250,.03);margin:10px 0}
+.drop-zone:hover{background:rgba(167,139,250,.09);border-color:var(--accent2)}
+.drop-zone-icon{font-size:36px}
+.drop-zone p{color:var(--text-secondary);font-size:13px;font-weight:600;text-align:center}
+.file-previews{display:flex;flex-direction:column;gap:7px;margin:7px 0;max-height:200px;overflow-y:auto}
+.file-prev-item{display:flex;align-items:center;gap:10px;padding:9px;background:rgba(167,139,250,.05);border:1px solid var(--border-color);border-radius:12px}
+.file-prev-item img,.file-prev-item video{width:40px;height:40px;border-radius:9px;object-fit:cover;flex-shrink:0}
+.file-prev-item span{flex:1;font-size:12px;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-prev-item button{background:var(--danger);color:#fff;border:none;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:13px;flex-shrink:0;transition:var(--tr)}
+.file-prev-item button:hover{transform:rotate(90deg) scale(1.1)}
+.music-zone{border:1px solid var(--music-color);border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:var(--tr);background:rgba(74,222,128,.04)}
+.music-zone:hover{background:rgba(74,222,128,.1)}
+.music-name{font-size:12px;color:var(--music-color);font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ══════════════════════════════════
+   LEADERBOARD
+══════════════════════════════════ */
+.lb-wrap{max-width:580px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.lb-tabs{display:flex;gap:7px;background:var(--card-bg);border:1px solid var(--card-border);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border-radius:18px;padding:5px}
+.lb-tab{flex:1;padding:9px;border:none;background:transparent;color:var(--text-tertiary);border-radius:13px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:var(--tr)}
+.lb-tab.active{background:var(--btn-primary);color:#fff}
+.lb-rank-card{padding:20px;text-align:center}
+.lb-rank-num{font-family:'Orbitron',monospace;font-size:48px;font-weight:900;background:linear-gradient(135deg,#ffd700,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lb-rank-sub{font-size:13px;color:var(--text-secondary);font-weight:700}
+.lb-list{overflow:hidden}
+.lb-head{display:flex;align-items:center;padding:10px 16px;background:rgba(167,139,250,.05);border-bottom:1px solid var(--border-color);font-size:11px;font-weight:700;color:var(--text-tertiary);letter-spacing:.4px}
+.lbh-rank{width:50px}.lbh-user{flex:1}.lbh-lv{width:68px;text-align:center}.lbh-xp{width:68px;text-align:center}.lbh-posts{width:56px;text-align:center}
+.lb-item{display:flex;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border-color);cursor:pointer;transition:.2s}
+.lb-item:hover{background:rgba(167,139,250,.05);transform:translateX(3px)}
+.lb-item.me{background:rgba(167,139,250,.1);border-left:3px solid var(--accent)}
+.lb-rank{width:50px;font-family:'Orbitron',monospace;font-size:15px;font-weight:900}
+.m1{color:#ffd700}.m2{color:#c0c0c0}.m3{color:#cd7f32}
+.lb-user{flex:1;display:flex;align-items:center;gap:10px}
+.lb-user img{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)}
+.lb-uname{font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:3px;flex-wrap:wrap}
+.lb-lv{width:68px;text-align:center;font-weight:700;color:var(--accent);font-family:'Orbitron',monospace;font-size:12px}
+.lb-xp{width:68px;text-align:center;font-size:11px;color:var(--text-tertiary)}
+.lb-posts{width:56px;text-align:center;font-size:11px;color:var(--text-tertiary)}
+
+/* ══════════════════════════════════
+   CHAT LIST
+══════════════════════════════════ */
+.chat-wrap{max-width:580px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.chat-top{display:flex;align-items:center;justify-content:space-between;padding:16px 18px}
+.chat-top h2{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:var(--text-primary)}
+.conv-list{display:flex;flex-direction:column;gap:7px}
+.conv-item{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;transition:.2s}
+.conv-item:hover{transform:translateX(4px);background:rgba(167,139,250,.05)}
+.conv-item.unread{border-left:3px solid var(--accent);background:rgba(167,139,250,.07)}
+.conv-ava{position:relative;flex-shrink:0}
+.conv-ava img{width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)}
+.conv-info{flex:1;min-width:0}
+.conv-top2{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.conv-name{font-weight:700;font-size:14px;color:var(--text-primary);display:flex;align-items:center;gap:3px}
+.conv-time{font-size:11px;color:var(--text-tertiary);flex-shrink:0}
+.conv-last{font-size:12px;color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:190px}
+.conv-last.bold{font-weight:700;color:var(--text-primary)}
+.unread-pill{background:var(--accent);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:9px;flex-shrink:0}
+
+/* ══════════════════════════════════
+   CHAT ROOM
+══════════════════════════════════ */
+.chat-room{display:flex;flex-direction:column;height:100%;max-width:580px;margin:0 auto;border-radius:20px;overflow:hidden}
+.chat-room-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border-color);flex-shrink:0;background:var(--card-bg);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur)}
+.chat-back{background:none;border:none;font-size:20px;cursor:pointer;color:var(--accent);padding:4px 7px;border-radius:50%;transition:.2s}
+.chat-back:hover{background:rgba(167,139,250,.12)}
+.chat-room-ava{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);cursor:pointer}
+.chat-room-info{flex:1}
+.chat-room-uname{font-weight:700;font-size:15px;color:var(--text-primary);cursor:pointer;display:flex;align-items:center;gap:4px}
+.chat-room-status{font-size:11px;color:var(--success);font-weight:600}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px;scroll-behavior:smooth}
+.chat-msgs::-webkit-scrollbar{width:2px}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
+.date-sep{text-align:center;margin:8px 0}
+.date-sep span{background:rgba(167,139,250,.12);color:var(--text-tertiary);font-size:10px;font-weight:700;padding:3px 12px;border-radius:18px;border:1px solid var(--border-color)}
+.msg-row{display:flex;gap:7px;animation:msgPop .22s ease-out}
+.msg-row.mine{flex-direction:row-reverse}
+@keyframes msgPop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.msg-ava{width:30px;height:30px;border-radius:50%;object-fit:cover;align-self:flex-end;cursor:pointer;flex-shrink:0;border:1px solid var(--accent)}
+.msg-row.mine .msg-ava{display:none}
+.msg-bwrap{display:flex;flex-direction:column;max-width:72%}
+.msg-row.mine .msg-bwrap{align-items:flex-end}
+.msg-row.theirs .msg-bwrap{align-items:flex-start}
+.msg-bubble{padding:9px 13px;border-radius:18px;word-break:break-word}
+.msg-row.mine .msg-bubble{background:var(--chat-me);color:var(--chat-me-text);border-radius:18px 18px 4px 18px}
+.msg-row.theirs .msg-bubble{background:var(--chat-them);color:var(--chat-them-text);border-radius:18px 18px 18px 4px;border:1px solid var(--border-color)}
+.msg-text{font-size:13px;line-height:1.45}
+.msg-media{max-width:210px;border-radius:12px;overflow:hidden;margin-top:5px;cursor:pointer}
+.msg-media img,.msg-media video{width:100%;display:block;border-radius:12px}
+.msg-meta{display:flex;align-items:center;gap:4px;margin-top:3px}
+.msg-time{font-size:10px;color:var(--text-tertiary)}
+.msg-row.mine .msg-time{color:rgba(255,255,255,.45)}
+.msg-tick{font-size:11px}
+.msg-tick.read{color:#38bdf8}
+.msg-del{background:none;border:none;font-size:11px;cursor:pointer;opacity:0;color:var(--text-tertiary);padding:2px 4px;border-radius:5px;transition:.15s;align-self:center}
+.msg-row:hover .msg-del{opacity:1}
+.msg-del:hover{background:rgba(239,68,68,.12);color:var(--danger)}
+.msg-deleted{opacity:.45;font-style:italic;font-size:12px}
+.chat-input-area{padding:10px 14px;border-top:1px solid var(--border-color);background:var(--card-bg);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);flex-shrink:0}
+.chat-media-prev{position:relative;display:inline-block;margin-bottom:7px}
+.chat-media-prev img,.chat-media-prev video{width:72px;height:72px;object-fit:cover;border-radius:12px;border:2px solid var(--accent)}
+.chat-del-media{position:absolute;top:-5px;right:-5px;background:var(--danger);color:#fff;border:none;width:20px;height:20px;border-radius:50%;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.chat-row{display:flex;gap:8px;align-items:flex-end}
+.chat-attach{background:rgba(167,139,250,.08);border:1px solid var(--border-color);width:40px;height:40px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr);flex-shrink:0;color:var(--text-primary)}
+.chat-attach:hover{background:rgba(167,139,250,.2)}
+.chat-inp{flex:1;padding:10px 16px;background:var(--input-bg);color:var(--text-primary);border:1px solid var(--input-border);border-radius:22px;font-family:'Nunito',sans-serif;font-size:13px;resize:none;max-height:96px;outline:none;transition:border-color .2s}
+.chat-inp:focus{border-color:var(--accent)}
+.chat-send{background:var(--btn-primary);border:none;width:40px;height:40px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:var(--tr);color:#fff}
+.chat-send:hover{transform:scale(1.08)}
+.chat-send:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* ══════════════════════════════════
+   MODAL
+══════════════════════════════════ */
+.modal{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);justify-content:center;align-items:center;padding:16px}
+.modal.open{display:flex}
+.modal-box{background:var(--card-bg);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--card-border);border-radius:24px;width:100%;max-width:540px;max-height:88vh;overflow-y:auto;animation:modalIn .3s cubic-bezier(.34,1.56,.64,1);box-shadow:0 16px 50px rgba(0,0,0,.45)}
+@keyframes modalIn{from{opacity:0;transform:scale(.93) translateY(16px)}to{opacity:1;transform:none}}
+.modal-head{padding:18px 20px;border-bottom:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between}
+.modal-head h3{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:var(--text-primary)}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-tertiary);padding:2px 5px;border-radius:7px;transition:.2s}
+.modal-close:hover{background:rgba(239,68,68,.12);color:var(--danger)}
+.modal-body{padding:20px}
+.modal-foot{padding:14px 20px;border-top:1px solid var(--border-color);display:flex;gap:10px}
+
+/* Comments Modal */
+.comments-modal .modal-box{display:flex;flex-direction:column;height:80vh;max-height:80vh}
+.comments-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px}
+.comment-item{display:flex;gap:10px}
+.comment-item img{width:36px;height:36px;border-radius:50%;object-fit:cover;cursor:pointer;flex-shrink:0;border:2px solid var(--border-color)}
+.comment-bub{flex:1;background:rgba(167,139,250,.06);border:1px solid var(--border-color);border-radius:16px;padding:8px 12px;max-width:83%}
+.comment-uname{font-weight:700;font-size:12px;color:var(--accent);margin-bottom:3px;cursor:pointer;display:flex;align-items:center;gap:3px}
+.comment-text{font-size:12px;color:var(--text-primary);line-height:1.4;word-break:break-word}
+.comment-media-wrap{margin-top:7px;border-radius:12px;overflow:hidden;width:150px;height:150px;background:#000;display:flex;align-items:center;justify-content:center}
+.comment-media-wrap img,.comment-media-wrap video{width:100%;height:100%;object-fit:cover;cursor:pointer}
+.comment-time{font-size:10px;color:var(--text-tertiary);margin-top:3px}
+.comment-foot{padding:12px 14px;border-top:1px solid var(--border-color);flex-shrink:0}
+.comment-inp-row{display:flex;gap:8px;margin-bottom:8px}
+.comment-inp-row input{flex:1;padding:10px 14px;border:1px solid var(--input-border);border-radius:22px;background:var(--input-bg);color:var(--text-primary);font-family:'Nunito',sans-serif;font-size:13px;outline:none;transition:border-color .2s}
+.comment-inp-row input:focus{border-color:var(--accent)}
+.comment-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sticker-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 16px;border-radius:28px;border:none;background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:var(--tr)}
+.sticker-btn:hover{transform:scale(1.04)}
+.sticker-prev-wrap{position:relative;display:inline-block}
+.sticker-prev{width:70px;height:70px;object-fit:cover;border-radius:12px;border:2px solid var(--accent)}
+.sticker-rm{position:absolute;top:-7px;right:-7px;background:var(--danger);color:#fff;border:none;width:22px;height:22px;border-radius:50%;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* Post Detail */
+.pd-head{padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border-color)}
+.pd-head img{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);cursor:pointer}
+.pd-uname{font-weight:700;font-size:14px;color:var(--text-primary);cursor:pointer;display:flex;align-items:center;gap:3px;flex-wrap:wrap}
+.pd-time{font-size:11px;color:var(--text-tertiary)}
+.pd-media-wrap{width:100%;background:#000;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.pd-media-wrap::-webkit-scrollbar{display:none}
+.pd-media-item{flex:0 0 100%;scroll-snap-align:start}
+.pd-media{width:100%;max-height:380px;object-fit:contain;background:#000;display:block}
+.pd-caption{padding:12px 16px;font-size:13px;color:var(--text-primary);border-bottom:1px solid var(--border-color);line-height:1.5}
+.pd-actions{padding:12px 16px;display:flex;gap:7px;border-bottom:1px solid var(--border-color)}
+.pd-stats{padding:7px 16px 12px;font-size:13px;color:var(--text-primary)}
+.pd-stats span{font-weight:800}
+.pd-comments{max-height:190px;overflow-y:auto;padding:12px 16px;border-top:1px solid var(--border-color);display:flex;flex-direction:column;gap:9px}
+.pd-comment{display:flex;gap:9px}
+.pd-comment img{width:30px;height:30px;border-radius:50%;object-fit:cover;cursor:pointer;flex-shrink:0}
+.pd-comment-bub{flex:1;background:rgba(167,139,250,.06);border:1px solid var(--border-color);border-radius:14px;padding:7px 11px}
+.pd-comment-uname{font-weight:700;font-size:11px;color:var(--accent);cursor:pointer;display:flex;align-items:center;gap:3px}
+.pd-comment-text{font-size:11px;color:var(--text-primary);margin-top:2px}
+.pd-add-comment{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border-color)}
+.pd-add-comment input{flex:1;padding:9px 14px;border:1px solid var(--input-border);border-radius:22px;background:var(--input-bg);color:var(--text-primary);font-family:'Nunito',sans-serif;font-size:13px;outline:none;transition:border-color .2s}
+.pd-add-comment input:focus{border-color:var(--accent)}
+.pd-close{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;border:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:var(--tr)}
+.pd-close:hover{background:rgba(239,68,68,.65);transform:rotate(90deg)}
+
+/* Edit Profile */
+.ep-ava-wrap{display:flex;justify-content:center;margin-bottom:18px;position:relative}
+.ep-ava{width:94px;height:94px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);cursor:pointer}
+.ep-ava-btn{position:absolute;bottom:0;right:calc(50% - 58px);background:var(--accent);border:none;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px}
+.ep-field{margin-bottom:16px}
+.ep-field label{display:block;font-weight:700;font-size:12px;color:var(--text-secondary);margin-bottom:6px;letter-spacing:.4px}
+.bio-count{font-size:10px;color:var(--text-tertiary);text-align:right;margin-top:3px}
+
+/* Wallpaper */
+.wall-box{border:1px solid var(--border-color);border-radius:18px;overflow:hidden;margin-top:14px}
+.wall-head{padding:12px 14px;background:rgba(167,139,250,.05);border-bottom:1px solid var(--border-color)}
+.wall-head label{font-weight:700;font-size:13px;color:var(--text-primary)}
+.wall-prev{height:140px;position:relative;background-size:cover;background-position:center;overflow:hidden;transition:.3s}
+.wall-prev-overlay{position:absolute;inset:0;background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;pointer-events:none}
+.wall-prev-overlay span{color:#fff;font-size:12px;font-weight:700;background:rgba(0,0,0,.45);padding:4px 12px;border-radius:18px}
+.wall-tabs{display:flex;gap:5px;padding:8px;background:rgba(167,139,250,.03);border-bottom:1px solid var(--border-color)}
+.wall-tab{flex:1;padding:7px;border:none;background:transparent;color:var(--text-tertiary);border-radius:12px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:var(--tr)}
+.wall-tab.active{background:var(--btn-primary);color:#fff}
+.wall-opts{padding:12px}
+.wall-upload-btn{width:100%;padding:12px;border:2px dashed var(--accent);border-radius:14px;background:rgba(167,139,250,.04);color:var(--accent);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:9px}
+.wall-upload-btn:hover{background:rgba(167,139,250,.12)}
+.color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:12px}
+.color-opt{aspect-ratio:1;border-radius:12px;cursor:pointer;transition:var(--tr);border:2px solid transparent}
+.color-opt.sel{border-color:var(--accent);transform:scale(1.05)}
+.grad-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:12px}
+.grad-opt{height:55px;border-radius:12px;cursor:pointer;transition:var(--tr);border:2px solid transparent}
+.grad-opt.sel{border-color:var(--accent)}
+.blur-row{display:flex;align-items:center;justify-content:space-between;padding:10px;background:rgba(167,139,250,.05);border-radius:12px;cursor:pointer}
+.blur-row-lbl{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--text-primary);font-size:13px}
+.blur-sw{width:46px;height:24px;background:var(--border-color);border-radius:28px;position:relative;transition:.25s}
+.blur-sw.on{background:var(--accent)}
+.blur-sw::after{content:'';width:20px;height:20px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:.3s}
+.blur-sw.on::after{left:24px}
+
+/* Admin Panel */
+.admin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px;padding:0 18px}
+.admin-card{padding:16px;border-radius:18px;position:relative;overflow:hidden;border:1px solid var(--border-color);transition:var(--tr);cursor:default}
+.admin-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--btn-primary)}
+.admin-card:hover{transform:translateY(-2px)}
+.admin-card-icon{font-size:26px;margin-bottom:8px}
+.admin-card-num{font-family:'Orbitron',monospace;font-size:26px;font-weight:900;color:var(--text-primary)}
+.admin-card-lbl{font-size:12px;color:var(--text-secondary);margin-top:3px}
+.admin-tabs{display:flex;gap:7px;margin:0 18px 16px;background:rgba(167,139,250,.05);border:1px solid var(--border-color);padding:5px;border-radius:16px;flex-wrap:wrap}
+.admin-tab{flex:1;padding:9px;border:none;background:transparent;color:var(--text-tertiary);border-radius:11px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:4px}
+.admin-tab.active{background:var(--btn-primary);color:#fff}
+.admin-section{display:none;padding:0 18px 18px}
+.admin-section.active{display:block}
+.admin-table{width:100%;border-collapse:collapse}
+.admin-table th{text-align:left;padding:9px 7px;color:var(--text-tertiary);font-size:11px;font-weight:700;border-bottom:2px solid var(--border-color);letter-spacing:.3px}
+.admin-table td{padding:9px 7px;border-bottom:1px solid var(--border-color);color:var(--text-primary);font-size:12px;vertical-align:middle}
+.admin-table tr:hover td{background:rgba(167,139,250,.04)}
+.admin-ucell{display:flex;align-items:center;gap:8px}
+.admin-ucell img{width:34px;height:34px;border-radius:50%;object-fit:cover;border:1px solid var(--accent)}
+.admin-act{padding:4px 10px;border:none;border-radius:18px;font-size:10px;font-weight:700;cursor:pointer;transition:var(--tr);margin:2px;font-family:'Nunito',sans-serif}
+.admin-act.av{background:rgba(56,189,248,.1);color:var(--accent2);border:1px solid var(--accent2)}
+.admin-act.av:hover{background:var(--accent2);color:#fff}
+.admin-act.ad{background:rgba(239,68,68,.08);color:var(--danger);border:1px solid var(--danger)}
+.admin-act.ad:hover{background:var(--danger);color:#fff}
+.admin-act.bg{background:linear-gradient(135deg,#a855f7,#d946ef);color:#fff}
+.admin-act.dl{background:rgba(220,38,38,.07);color:#dc2626;border:1px solid #dc2626}
+.admin-act.dl:hover{background:#dc2626;color:#fff}
+.admin-post-item{display:flex;align-items:center;gap:10px;padding:9px;border-radius:14px;margin-bottom:7px;transition:.2s}
+.admin-post-item:hover{background:rgba(167,139,250,.05)}
+.admin-thumb{width:48px;height:48px;border-radius:12px;overflow:hidden;background:#000;flex-shrink:0}
+.admin-thumb img,.admin-thumb video{width:100%;height:100%;object-fit:cover}
+.admin-post-info{flex:1}
+.admin-post-info strong{font-size:13px;color:var(--text-primary)}
+.admin-post-info div{font-size:11px;color:var(--text-tertiary);margin-top:2px}
+.admin-del-btn{background:var(--danger);color:#fff;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:15px;transition:var(--tr);display:flex;align-items:center;justify-content:center}
+.admin-del-btn:hover{background:#b91c1c;transform:rotate(90deg)}
+.badge-list{display:flex;flex-direction:column;gap:9px}
+.badge-card-item{display:flex;align-items:center;justify-content:space-between;padding:12px;border:1px solid var(--border-color);border-radius:16px;transition:.2s}
+.badge-card-item:hover{background:rgba(167,139,250,.05)}
+.badge-icon-big{width:44px;height:44px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:22px;background:rgba(167,139,250,.09)}
+
+/* New Chat */
+.new-chat-res{padding:10px;max-height:300px;overflow-y:auto}
+
+/* Delete confirm */
+.del-confirm{text-align:center;padding:8px 0}
+.del-confirm .big-icon{font-size:50px;margin-bottom:12px}
+.del-confirm h3{font-family:'Orbitron',monospace;font-size:17px;color:var(--danger);margin-bottom:9px}
+.del-confirm p{color:var(--text-secondary);font-size:13px;line-height:1.55}
+.del-warn{margin-top:12px;padding:9px 14px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.28);border-radius:12px;font-size:12px;font-weight:700;color:var(--danger)}
+
+/* Form group */
+.form-grp{margin-bottom:16px}
+.form-grp label{display:block;font-weight:700;font-size:12px;color:var(--text-secondary);margin-bottom:6px;letter-spacing:.3px}
+select.inp{appearance:none;cursor:pointer}
+.badge-prev-area{background:rgba(167,139,250,.05);border:1px solid var(--border-color);border-radius:14px;padding:12px;text-align:center;margin-top:12px}
+.badge-prev-lbl{font-size:11px;color:var(--text-tertiary);margin-bottom:8px}
+.badge-prev-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:38px;font-size:13px;font-weight:700}
+
+/* Empty / Loading */
+.empty{text-align:center;padding:44px 18px;color:var(--text-secondary)}
+.empty-icon{font-size:48px;margin-bottom:12px;opacity:.45}
+.empty h3{font-size:17px;font-weight:700;margin-bottom:7px;color:var(--text-primary)}
+.spin-wrap{display:flex;align-items:center;justify-content:center;padding:36px;gap:10px;color:var(--text-secondary);font-size:13px}
+.spin-sm{width:18px;height:18px;border:2px solid var(--border-color);border-top-color:var(--accent);border-radius:50%;animation:spin .9s linear infinite;flex-shrink:0}
+
+/* Level-up */
+.level-up-notif{
+  position:fixed;bottom:84px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,#ffd700,#ff8c00);color:#1a0a00;
+  padding:12px 24px;border-radius:48px;font-weight:900;font-family:'Orbitron',monospace;
+  z-index:2000;font-size:13px;letter-spacing:1px;
+  animation:levelUp .35s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 5px 25px rgba(255,150,0,.55);
+  will-change:transform;
+}
+@keyframes levelUp{from{opacity:0;transform:translateX(-50%) scale(.72)}to{opacity:1;transform:translateX(-50%) scale(1)}}
+
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
+
+@media(min-width:769px){
+  #app{max-width:460px;margin:0 auto;height:96vh;border-radius:28px;overflow:hidden;box-shadow:0 16px 60px rgba(0,0,0,.65)}
+  .moon,.sun{right:calc(50% - 280px)}
+}
+@media(max-width:480px){
+  .lbh-xp,.lbh-posts,.lb-xp,.lb-posts{display:none}
+  .sun,.moon{right:16px;top:46px;width:52px;height:52px}
+}
+</style>
+</head>
+<body>
+
+<div id="skyCanvas"></div>
+<canvas id="meteorCanvas"></canvas>
+<canvas id="starsLayer"></canvas>
+<div class="moon" id="moonEl"></div>
+<div class="sun" id="sunEl"></div>
+<div class="aurora" id="auroraEl"></div>
+<div class="clouds-layer">
+  <div class="cloud cloud-1"></div>
+  <div class="cloud cloud-2"></div>
+  <div class="cloud cloud-3"></div>
+</div>
+<div class="rain-layer" id="rainLayer">
+  <canvas id="rainCanvas"></canvas>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+<div class="loading-overlay" id="loadingOverlay"><div class="loader-ring"></div></div>
+
+<div id="app">
+  <header>
+    <div class="logo" onclick="navigate(currentView||'feed')">✦ MIO</div>
+    <div class="header-right">
+      <div class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Siang/Malam">
+        <span class="theme-btn-day">☀️</span>
+        <span class="theme-btn-night">🌙</span>
+        <div class="theme-btn-knob" id="themeKnob"></div>
+      </div>
+      <div id="userHeaderArea" style="display:none;display:flex;align-items:center;gap:8px">
+        <img id="headerAvatar" class="avatar-sm" src="" alt="me" onclick="navigate('profile')">
+        <button class="logout-btn" id="logoutBtn">Keluar</button>
+      </div>
+    </div>
+  </header>
+  <main id="main"></main>
+  <nav class="bottom-nav" id="bottomNav" style="display:none">
+    <button class="nav-btn active" data-view="feed">🏠<span>Beranda</span></button>
+    <button class="nav-btn" data-view="explore">🔍<span>Jelajah</span></button>
+    <button class="nav-btn" data-view="leaderboard">🏆<span>Ranking</span></button>
+    <button class="nav-btn" data-view="chat" id="chatNavBtn">💬<span>Pesan</span></button>
+    <button class="nav-btn" data-view="upload">✦<span>Post</span></button>
+    <button class="nav-btn" data-view="profile">👤<span>Profil</span></button>
+  </nav>
+</div>
+
+<!-- MODALS -->
+<div class="modal comments-modal" id="commentsModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>💬 Komentar</h3>
+      <button class="modal-close" onclick="closeModal('commentsModal')">×</button>
+    </div>
+    <div class="comments-body" id="commentsBody"></div>
+    <div class="comment-foot">
+      <div class="comment-inp-row">
+        <input type="text" id="commentInp" placeholder="Tulis komentar..." maxlength="1000">
+        <button class="btn btn-primary btn-sm" id="submitCommentBtn">Kirim</button>
+      </div>
+      <div class="comment-tools">
+        <input type="file" id="commentMediaFile" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,video/mp4,video/webm" style="display:none">
+        <button class="sticker-btn" onclick="document.getElementById('commentMediaFile').click()">🎨 Stiker</button>
+        <div id="commentMediaPrev" style="display:none" class="sticker-prev-wrap">
+          <img id="commentPrevImg" class="sticker-prev" style="display:none" alt="">
+          <video id="commentPrevVid" class="sticker-prev" style="display:none" controls></video>
+          <button class="sticker-rm" onclick="removeCommentMedia()">×</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal post-detail-modal" id="postDetailModal">
+  <div class="modal-box" style="position:relative">
+    <button class="pd-close" onclick="closeModal('postDetailModal')">×</button>
+    <div id="pdContent"></div>
+  </div>
+</div>
+
+<div class="modal" id="newChatModal">
+  <div class="modal-box" style="max-width:400px">
+    <div class="modal-head">
+      <h3>💬 Pesan Baru</h3>
+      <button class="modal-close" onclick="closeModal('newChatModal')">×</button>
+    </div>
+    <div style="padding:12px;border-bottom:1px solid var(--border-color)">
+      <input type="text" class="inp" id="newChatSearch" placeholder="Cari pengguna...">
+    </div>
+    <div class="new-chat-res" id="newChatRes">
+      <div class="empty"><p style="font-size:13px;color:var(--text-tertiary)">Ketik nama untuk mencari</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="editProfileModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>✏️ Edit Profil</h3>
+      <button class="modal-close" onclick="closeModal('editProfileModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="ep-ava-wrap">
+        <img class="ep-ava" id="epAva" src="" alt="avatar">
+        <button class="ep-ava-btn" onclick="document.getElementById('epAvaFile').click()">📷</button>
+        <input type="file" id="epAvaFile" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" style="display:none">
+      </div>
+      <div class="ep-field">
+        <label>Bio</label>
+        <textarea class="inp" id="epBio" rows="3" placeholder="Tulis bio..." maxlength="150"></textarea>
+        <div class="bio-count"><span id="bioCount">0</span>/150</div>
+      </div>
+      <div class="wall-box">
+        <div class="wall-head"><label>🎨 Wallpaper Profil</label></div>
+        <div class="wall-prev" id="wallPrev">
+          <div class="wall-prev-overlay"><span>Preview Wallpaper</span></div>
+        </div>
+        <div class="wall-tabs">
+          <button class="wall-tab active" data-wtab="image">🖼️ Media</button>
+          <button class="wall-tab" data-wtab="color">🎨 Warna</button>
+          <button class="wall-tab" data-wtab="gradient">🌈 Gradien</button>
+        </div>
+        <div class="wall-opts">
+          <div id="wtabImage">
+            <button class="wall-upload-btn" onclick="document.getElementById('wallFile').click()">📤 Upload Gambar / Video</button>
+            <input type="file" id="wallFile" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,video/mp4,video/webm,video/quicktime" style="display:none">
+            <div id="wallFilePrev" style="display:none;margin-top:7px">
+              <img id="wallFileImg" style="width:100%;max-height:120px;object-fit:cover;border-radius:12px;display:none" alt="">
+              <video id="wallFileVid" style="width:100%;max-height:120px;object-fit:cover;border-radius:12px;display:none" controls muted></video>
+            </div>
+          </div>
+          <div id="wtabColor" style="display:none">
+            <div class="color-grid">
+              <div class="color-opt" style="background:#667eea" data-color="#667eea"></div>
+              <div class="color-opt" style="background:#f093fb" data-color="#f093fb"></div>
+              <div class="color-opt" style="background:#4facfe" data-color="#4facfe"></div>
+              <div class="color-opt" style="background:#43e97b" data-color="#43e97b"></div>
+              <div class="color-opt" style="background:#fa709a" data-color="#fa709a"></div>
+              <div class="color-opt" style="background:#a18cd1" data-color="#a18cd1"></div>
+              <div class="color-opt" style="background:#ff9a9e" data-color="#ff9a9e"></div>
+              <div class="color-opt" style="background:#ffecd2" data-color="#ffecd2"></div>
+            </div>
+            <div class="ep-field"><label>Warna Custom</label><input type="color" class="inp" id="customColor" value="#667eea"></div>
+          </div>
+          <div id="wtabGradient" style="display:none">
+            <div class="grad-grid">
+              <div class="grad-opt" style="background:linear-gradient(135deg,#667eea,#764ba2)" data-grad="linear-gradient(135deg,#667eea,#764ba2)"></div>
+              <div class="grad-opt" style="background:linear-gradient(135deg,#f093fb,#f5576c)" data-grad="linear-gradient(135deg,#f093fb,#f5576c)"></div>
+              <div class="grad-opt" style="background:linear-gradient(135deg,#4facfe,#00f2fe)" data-grad="linear-gradient(135deg,#4facfe,#00f2fe)"></div>
+              <div class="grad-opt" style="background:linear-gradient(135deg,#43e97b,#38f9d7)" data-grad="linear-gradient(135deg,#43e97b,#38f9d7)"></div>
+              <div class="grad-opt" style="background:linear-gradient(135deg,#fa709a,#fee140)" data-grad="linear-gradient(135deg,#fa709a,#fee140)"></div>
+              <div class="grad-opt" style="background:linear-gradient(135deg,#a18cd1,#fbc2eb)" data-grad="linear-gradient(135deg,#a18cd1,#fbc2eb)"></div>
+            </div>
+          </div>
+          <div class="blur-row" id="blurRow" onclick="toggleBlur()">
+            <div class="blur-row-lbl"><span>✨</span><span>Efek Blur</span></div>
+            <div class="blur-sw" id="blurSw"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" id="saveProfileBtn" style="flex:1">💾 Simpan</button>
+      <button class="btn btn-ghost" onclick="closeModal('editProfileModal')" style="flex:1">Batal</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="adminModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>👑 Developer Panel</h3>
+      <button class="modal-close" onclick="closeModal('adminModal')">×</button>
+    </div>
+    <div style="padding:18px 18px 0"><div class="admin-grid" id="adminStatsGrid"></div></div>
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-atab="stats">📊 Stats</button>
+      <button class="admin-tab" data-atab="users">👥 Users</button>
+      <button class="admin-tab" data-atab="posts">📷 Posts</button>
+      <button class="admin-tab" data-atab="badges">🏷️ Badges</button>
+    </div>
+    <div id="adminStats" class="admin-section active"></div>
+    <div id="adminUsers" class="admin-section"></div>
+    <div id="adminPosts" class="admin-section"></div>
+    <div id="adminBadges" class="admin-section"></div>
+  </div>
+</div>
+
+<div class="modal" id="assignBadgeModal">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-head">
+      <h3>🎖️ Assign Badge</h3>
+      <button class="modal-close" onclick="closeModal('assignBadgeModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grp"><label>User ID</label><input type="text" class="inp" id="badgeUserId" placeholder="ID pengguna" maxlength="50"></div>
+      <div class="form-grp"><label>Nama Badge</label><input type="text" class="inp" id="badgeName" placeholder="Contoh: Top Creator" maxlength="30"></div>
+      <div class="form-grp"><label>Icon (emoji)</label><input type="text" class="inp" id="badgeIcon" value="🏷️" maxlength="10"></div>
+      <div class="form-grp"><label>Warna</label>
+        <select class="inp" id="badgeColor">
+          <option value="#667eea">💜 Ungu</option><option value="#FFD700">⭐ Emas</option>
+          <option value="#C0C0C0">🥈 Perak</option><option value="#CD7F32">🥉 Perunggu</option>
+          <option value="#FF4444">❤️ Merah</option><option value="#50C878">💚 Hijau</option>
+          <option value="#0F52BA">💙 Biru</option><option value="#FF8C00">🧡 Oranye</option>
+          <option value="#D946EF">🩷 Pink</option>
+        </select>
+      </div>
+      <div class="badge-prev-area">
+        <div class="badge-prev-lbl">Preview:</div>
+        <span class="badge-prev-chip" id="badgePrevChip" style="background:#667eea20;color:#667eea;border:1px solid #667eea">🏷️ Nama Badge</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" id="confirmBadgeBtn" style="flex:1">✨ Assign</button>
+      <button class="btn btn-ghost" onclick="closeModal('assignBadgeModal')" style="flex:1">Batal</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="deleteUserModal">
+  <div class="modal-box" style="max-width:360px">
+    <div class="modal-body">
+      <div class="del-confirm">
+        <div class="big-icon">⚠️</div>
+        <h3>Hapus Akun</h3>
+        <p>Akun <strong id="delUserName" style="color:var(--text-primary)"></strong> beserta semua data akan dihapus permanen.</p>
+        <div class="del-warn">⛔ Tindakan ini tidak dapat dibatalkan!</div>
+      </div>
+      <input type="hidden" id="delUserId">
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-danger" id="confirmDelUserBtn" style="flex:1">🗑️ Hapus Sekarang</button>
+      <button class="btn btn-ghost" onclick="closeModal('deleteUserModal')" style="flex:1">Batal</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// THEME TOGGLE (sebelum render untuk cegah flicker)
+// ══════════════════════════════════════════════
+(function(){
+  const saved=localStorage.getItem('mioTheme')||'night';
+  document.documentElement.setAttribute('data-theme',saved);
+})();
+
+// ══════════════════════════════════════════════
+// PERFORMANCE: Deteksi low-end device
+// HP murah → kurangi partikel lebih drastis
+// ══════════════════════════════════════════════
+const IS_LOW_END=(()=>{
+  const nav=navigator;
+  // Logical cores ≤ 4 = low-end
+  if(nav.hardwareConcurrency && nav.hardwareConcurrency<=4) return true;
+  // Device memory ≤ 2GB
+  if(nav.deviceMemory && nav.deviceMemory<=2) return true;
+  // Slow connection
+  if(nav.connection && (nav.connection.effectiveType==='slow-2g'||nav.connection.effectiveType==='2g')) return true;
+  return false;
+})();
+
+// ══════════════════════════════════════════════
+// STAR + METEOR CANVAS — dioptimasi 30fps,
+// jumlah bintang dikurangi, shadow hanya star besar
+// ══════════════════════════════════════════════
+(function(){
+  const mc=document.getElementById('meteorCanvas');
+  const sc=document.getElementById('starsLayer');
+  const mctx=mc.getContext('2d',{alpha:true});
+  const sctx=sc.getContext('2d',{alpha:true});
+
+  // Target 30fps untuk hemat baterai HP
+  const TARGET_FPS=IS_LOW_END?20:30;
+  const FRAME_MS=1000/TARGET_FPS;
+
+  function resize(){
+    const W=window.innerWidth, H=window.innerHeight;
+    mc.width=sc.width=W;
+    mc.height=sc.height=H;
+    generateStars();
+  }
+
+  const stars=[];
+  function generateStars(){
+    stars.length=0;
+    const W=window.innerWidth,H=window.innerHeight;
+    // Dikurangi: 1 bintang per 3500px² (was 2200)
+    const density=IS_LOW_END?6000:3500;
+    const count=Math.floor((W*H)/density);
+    for(let i=0;i<count;i++){
+      const tier=Math.random();
+      stars.push({
+        x:Math.random()*W,
+        y:Math.random()*H*0.88,
+        r:tier<0.7?Math.random()*0.7+0.1:tier<0.92?Math.random()*1.1+0.6:Math.random()*1.6+1.1,
+        a:Math.random()*0.5+0.2,
+        da:(Math.random()*0.006+0.002)*(Math.random()<.5?1:-1),
+        // Hanya bintang besar yang berwarna (hemat fillStyle change)
+        big:tier>=0.92,
+        color:tier>=0.92?(Math.random()<.33?'#fde68a':Math.random()<.5?'#bfdbfe':'#ffffff'):'#ffffff'
+      });
+    }
+  }
+
+  function animateStars(){
+    sctx.clearRect(0,0,sc.width,sc.height);
+    const isNight=document.documentElement.getAttribute('data-theme')!=='day';
+    if(!isNight)return;
+
+    // Milky way (hanya malam, sekali gambar)
+    const w=sc.width,h=sc.height;
+    const grad=sctx.createLinearGradient(w*.08,h*.04,w*.92,h*.7);
+    grad.addColorStop(0,'rgba(180,160,255,0)');
+    grad.addColorStop(.4,'rgba(180,160,255,0.018)');
+    grad.addColorStop(.6,'rgba(200,180,255,0.03)');
+    grad.addColorStop(1,'rgba(180,160,255,0)');
+    sctx.save();sctx.fillStyle=grad;
+    sctx.beginPath();
+    sctx.moveTo(0,h*.12);
+    sctx.bezierCurveTo(w*.28,h*.04,w*.62,h*.52,w,h*.62);
+    sctx.lineTo(w,h*.78);
+    sctx.bezierCurveTo(w*.62,h*.66,w*.28,h*.18,0,h*.28);
+    sctx.closePath();sctx.fill();sctx.restore();
+
+    // Batch: gambar semua bintang putih dulu (satu fillStyle)
+    sctx.fillStyle='#ffffff';
+    stars.forEach(s=>{
+      s.a+=s.da;
+      if(s.a>0.9||s.a<0.05)s.da*=-1;
+      if(s.big)return; // skip bintang besar, digambar terpisah
+      sctx.globalAlpha=Math.max(0.05,Math.min(0.9,s.a));
+      sctx.beginPath();sctx.arc(s.x,s.y,s.r,0,Math.PI*2);sctx.fill();
+    });
+
+    // Bintang besar dengan warna & shadow
+    stars.forEach(s=>{
+      if(!s.big)return;
+      sctx.save();
+      sctx.globalAlpha=Math.max(0.1,Math.min(0.9,s.a));
+      sctx.fillStyle=s.color;
+      sctx.shadowBlur=s.r*4;sctx.shadowColor=s.color;
+      sctx.beginPath();sctx.arc(s.x,s.y,s.r,0,Math.PI*2);sctx.fill();
+      sctx.restore();
+    });
+    sctx.globalAlpha=1;
+  }
+
+  const meteors=[];
+  function spawnMeteor(){
+    if(IS_LOW_END&&meteors.length>1)return; // max 1 meteor di low-end
+    if(!IS_LOW_END&&meteors.length>3)return; // max 3 meteor di normal
+    const angle=Math.PI/5+(Math.random()-.5)*(Math.PI/8);
+    const startX=Math.random()*window.innerWidth*1.4-window.innerWidth*.2;
+    const speed=8+Math.random()*10;
+    const len=70+Math.random()*180;
+    meteors.push({
+      x:startX,y:-50,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,
+      len,alpha:1,width:1+Math.random()*1.5,tail:[]
+    });
+  }
+
+  function animateMeteors(){
+    mctx.clearRect(0,0,mc.width,mc.height);
+    if(document.documentElement.getAttribute('data-theme')==='day')return;
+    // Spawn lebih jarang di low-end
+    if(Math.random()<(IS_LOW_END?0.008:0.018))spawnMeteor();
+    meteors.forEach((m,i)=>{
+      m.tail.unshift({x:m.x,y:m.y});
+      if(m.tail.length>Math.floor(m.len/5))m.tail.pop();
+      m.x+=m.vx;m.y+=m.vy;m.alpha-=0.016;
+      if(m.alpha<=0||m.y>mc.height+60){meteors.splice(i,1);return;}
+      if(m.tail.length>1){
+        const last=m.tail[m.tail.length-1];
+        const grad=mctx.createLinearGradient(last.x,last.y,m.x,m.y);
+        grad.addColorStop(0,'rgba(255,255,255,0)');
+        grad.addColorStop(1,`rgba(255,255,255,${m.alpha})`);
+        mctx.save();
+        mctx.strokeStyle=grad;mctx.lineWidth=m.width;
+        mctx.beginPath();
+        mctx.moveTo(last.x,last.y);
+        m.tail.forEach(pt=>mctx.lineTo(pt.x,pt.y));
+        mctx.lineTo(m.x,m.y);mctx.stroke();mctx.restore();
+      }
+    });
+  }
+
+  let lastFrame=0;
+  function loop(ts){
+    requestAnimationFrame(loop);
+    if(ts-lastFrame<FRAME_MS)return; // throttle ke target fps
+    lastFrame=ts;
+    animateStars();
+    animateMeteors();
+  }
+
+  let resizeT;
+  window.addEventListener('resize',()=>{clearTimeout(resizeT);resizeT=setTimeout(resize,200);},{passive:true});
+  resize();
+  requestAnimationFrame(loop);
+})();
+
+// ══════════════════════════════════════════════
+// RAIN SYSTEM (DAY) — dikurangi dari 185 → 80 tetes
+// Ripple dihapus (DOM manipulation mahal di HP)
+// ══════════════════════════════════════════════
+(function(){
+  const canvas=document.getElementById('rainCanvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d',{alpha:true});
+  const COUNT=IS_LOW_END?40:80; // dikurangi drastis
+  const TARGET_FPS=IS_LOW_END?20:30;
+  const FRAME_MS=1000/TARGET_FPS;
+  let drops=[],w=0,h=0,lastF=0;
+
+  function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;}
+  function mkDrop(randomY){
+    const speed=10+Math.random()*14,len=14+Math.random()*36;
+    return{x:Math.random()*(w+150)-75,y:randomY?Math.random()*h:-len-Math.random()*h*.25,speed,len,opacity:.1+Math.random()*.35,width:.4+Math.random()*.8};
+  }
+  function initDrops(){drops=[];for(let i=0;i<COUNT;i++)drops.push(mkDrop(true));}
+  const WIND=0.2;
+  function loop(ts){
+    requestAnimationFrame(loop);
+    if(ts-lastF<FRAME_MS)return;
+    lastF=ts;
+    const isDay=document.documentElement.getAttribute('data-theme')==='day';
+    ctx.clearRect(0,0,w,h);
+    if(!isDay)return;
+    drops.forEach(d=>{
+      const vx=Math.sin(WIND)*d.speed,vy=Math.cos(WIND)*d.speed;
+      const x2=d.x-vx*(d.len/d.speed),y2=d.y-vy*(d.len/d.speed);
+      const g=ctx.createLinearGradient(x2,y2,d.x,d.y);
+      g.addColorStop(0,`rgba(120,185,255,0)`);
+      g.addColorStop(1,`rgba(120,185,255,${d.opacity})`);
+      ctx.save();ctx.strokeStyle=g;ctx.lineWidth=d.width;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(d.x,d.y);ctx.stroke();ctx.restore();
+      d.x+=vx;d.y+=vy;
+      if(d.y>h+d.len||d.x>w+100)Object.assign(d,mkDrop(false));
+    });
+  }
+  let resizeT;
+  window.addEventListener('resize',()=>{clearTimeout(resizeT);resizeT=setTimeout(()=>{resize();initDrops();},200);},{passive:true});
+  resize();initDrops();
+  requestAnimationFrame(loop);
+})();
+
+// ══════════════════════════════════════════════
+// THEME
+// ══════════════════════════════════════════════
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme');
+  const next=cur==='night'?'day':'night';
+  document.documentElement.setAttribute('data-theme',next);
+  localStorage.setItem('mioTheme',next);
+}
+function initTheme(){
+  const saved=localStorage.getItem('mioTheme')||'night';
+  document.documentElement.setAttribute('data-theme',saved);
+}
+initTheme();
+
+// ══════════════════════════════════════════════
+// SECURITY HELPERS
+// ══════════════════════════════════════════════
+function escHtml(s){
+  if(s===null||s===undefined)return'';
+  const d=document.createElement('div');d.textContent=String(s);return d.innerHTML;
+}
+function safeUrl(url){
+  if(!url||typeof url!=='string')return null;
+  if(url.startsWith('/uploads/')&&!url.includes('..')&&!url.includes('\0'))return url;
+  if(url.startsWith('blob:'))return url;
+  return null;
+}
+function safeImg(url){return safeUrl(url)||'https://via.placeholder.com/40';}
+function safeOpen(url){const s=safeUrl(url);if(s)window.open(s,'_blank','noopener,noreferrer');}
+const MIME_IMG=['image/jpeg','image/jpg','image/png','image/gif','image/webp'];
+const MIME_VID=['video/mp4','video/webm','video/quicktime','video/avi'];
+const MIME_AUD=['audio/mpeg','audio/mp3','audio/wav','audio/ogg','audio/mp4','audio/aac'];
+function validateFile(file,allowed,maxMB){
+  if(!allowed.includes(file.type))return`Format "${file.name}" tidak didukung`;
+  if(file.size>maxMB*1024*1024)return`File "${file.name}" terlalu besar (max ${maxMB}MB)`;
+  return null;
+}
+
+// ══════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════
+function toast(msg,type='info',ms=3500){
+  const icons={success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'};
+  const el=document.createElement('div');el.className=`toast ${type}`;
+  el.innerHTML=`<span>${icons[type]}</span><span style="flex:1">${escHtml(msg)}</span><button class="toast-close" onclick="this.parentElement.remove()">×</button>`;
+  document.getElementById('toastWrap').appendChild(el);
+  setTimeout(()=>{el.style.animation='toastOut .25s ease forwards';setTimeout(()=>el.remove(),250);},ms);
+}
+
+// ══════════════════════════════════════════════
+// LOADING
+// ══════════════════════════════════════════════
+const $overlay=document.getElementById('loadingOverlay');
+let $loadT=null;
+function showLoad(){if($loadT)clearTimeout($loadT);$overlay.classList.add('active');}
+function hideLoad(){$loadT=setTimeout(()=>$overlay.classList.remove('active'),200);}
+
+// ══════════════════════════════════════════════
+// MODAL
+// ══════════════════════════════════════════════
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m&&m.id!=='deleteUserModal')m.classList.remove('open');});
+});
+
+// ══════════════════════════════════════════════
+// API HELPERS
+// ══════════════════════════════════════════════
+let isSubmitting=false;
+const api=async(url,opts={})=>{
+  try{
+    const r=await fetch(url,{...opts,headers:{'Content-Type':'application/json',...(opts.headers||{})}});
+    if(r.status===401){currentUser=null;renderAuth();return null;}
+    if(r.status===429){const d=await r.json().catch(()=>({}));toast('Terlalu banyak permintaan.'+(d.retryAfter?` Coba ${d.retryAfter}s lagi.`:''),'warning',4500);return null;}
+    const d=await r.json();return r.ok?d:null;
+  }catch{return null;}
+};
+const apiRaw=async(url,opts={})=>{
+  try{const r=await fetch(url,{...opts,headers:{'Content-Type':'application/json',...(opts.headers||{})}});return await r.json();}catch{return null;}
+};
+const apiForm=async(url,fd)=>{
+  try{
+    const r=await fetch(url,{method:'POST',body:fd});
+    if(r.status===401){currentUser=null;renderAuth();return null;}
+    if(r.status===429){toast('Terlalu banyak permintaan. Coba lagi nanti.','warning');return null;}
+    return r.json();
+  }catch{return null;}
+};
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let currentUser=null,currentView='feed',currentProfileId=null;
+let currentPost=null,commentsPostId=null,commentMediaFile=null;
+let selectedFiles=[],selectedMusic=null;
+let wType='image',wValue='',wBlur=false,wTempFile=null;
+let convId=null,chatOtherUser=null,chatPoll=null,chatMediaFile=null,lastMsgCount=0;
+
+// ══════════════════════════════════════════════
+// TIME HELPERS
+// ══════════════════════════════════════════════
+function timeAgo(d){
+  const m=Math.floor((Date.now()-new Date(d).getTime())/60000);
+  if(m<1)return'Baru saja';if(m<60)return`${m}m`;
+  const h=Math.floor(m/60);if(h<24)return`${h}j`;
+  const dd=Math.floor(h/24);if(dd<7)return`${dd}h`;
+  return new Date(d).toLocaleDateString('id-ID',{day:'numeric',month:'short'});
+}
+function fmtTime(d){return new Date(d).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});}
+function fmtDate(d){
+  const dt=new Date(d),t=new Date(),y=new Date(t);y.setDate(y.getDate()-1);
+  if(dt.toDateString()===t.toDateString())return'Hari ini';
+  if(dt.toDateString()===y.toDateString())return'Kemarin';
+  return dt.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'});
+}
+
+// ══════════════════════════════════════════════
+// AUDIO
+// ══════════════════════════════════════════════
+function initAudio(pid,url){
+  const s=safeUrl(url);if(!s)return;
+  const a=new Audio(s);a.loop=true;a.volume=0.5;a.preload='none';
+  window[`pa_${pid}`]=a;window[`pp_${pid}`]=false;
+}
+window.toggleMusic=function(pid){
+  const a=window[`pa_${pid}`];const s=document.getElementById(`ms_${pid}`);if(!a)return;
+  if(window[`pp_${pid}`]){a.pause();window[`pp_${pid}`]=false;if(s)s.textContent='♪ Play';}
+  else{stopAllAudio(pid);a.currentTime=0;a.play().catch(()=>{});window[`pp_${pid}`]=true;if(s)s.textContent='♪ Stop';}
+};
+function stopAllAudio(keep){
+  for(const k in window){
+    if(k.startsWith('pa_')&&k!==`pa_${keep}`&&window[k] instanceof Audio){
+      window[k].pause();window[k].currentTime=0;
+      window[k.replace('pa_','pp_')]=false;
+      const s=document.getElementById(`ms_${k.replace('pa_','')}`);if(s)s.textContent='♪ Play';
+    }
+  }
+}
+function stopChatPoll(){if(chatPoll){clearInterval(chatPoll);chatPoll=null;}}
+
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden)stopChatPoll();
+  else if(convId)chatPoll=setInterval(loadChatMsgs,3000);
+});
+
+// ══════════════════════════════════════════════
+// LEVEL UP
+// ══════════════════════════════════════════════
+function showLevelUp(lvl,icon){
+  const n=document.createElement('div');n.className='level-up-notif';
+  n.textContent=`${icon} LEVEL UP! Level ${lvl} ${icon}`;
+  document.body.appendChild(n);setTimeout(()=>n.remove(),3000);
+}
+
+// ══════════════════════════════════════════════
+// NAVIGATE
+// ══════════════════════════════════════════════
+function navigate(view){
+  if(view!=='chat'){stopChatPoll();convId=null;chatOtherUser=null;}
+  const main=document.getElementById('main');
+  main.style.opacity='0';main.style.transform='translateY(12px)';
+  setTimeout(()=>{
+    currentView=view;
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+    switch(view){
+      case'feed':renderFeed();break;
+      case'explore':renderExplore();break;
+      case'leaderboard':renderLeaderboard();break;
+      case'chat':renderChatList();break;
+      case'upload':renderUpload();break;
+      case'profile':currentProfileId=currentUser.id;renderProfile(currentUser.id);break;
+    }
+    setTimeout(()=>{main.style.opacity='1';main.style.transform='none';},50);
+  },180);
+}
+
+// ══════════════════════════════════════════════
+// CHAT BADGE
+// ══════════════════════════════════════════════
+async function updateChatBadge(){
+  const d=await api('/api/chat/unread');
+  const btn=document.getElementById('chatNavBtn');if(!btn)return;
+  const ex=btn.querySelector('.nav-badge');if(ex)ex.remove();
+  if(d&&d.count>0){
+    const b=document.createElement('span');b.className='nav-badge';
+    b.textContent=d.count>9?'9+':d.count;btn.appendChild(b);
+  }
+}
+
+// ══════════════════════════════════════════════
+// LOAD USER
+// ══════════════════════════════════════════════
+async function loadUser(){
+  showLoad();
+  const d=await api('/api/me');
+  if(d){
+    currentUser=d;
+    document.getElementById('headerAvatar').src=safeImg(d.profilePic);
+    document.getElementById('userHeaderArea').style.display='flex';
+    document.getElementById('bottomNav').style.display='flex';
+    navigate(currentView||'feed');
+    updateChatBadge();
+    setInterval(updateChatBadge,15000);
+    hideLoad();return true;
+  }else{renderAuth();hideLoad();return false;}
+}
+
+// ══════════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════════
+function renderAuth(){
+  currentUser=null;
+  document.getElementById('userHeaderArea').style.display='none';
+  document.getElementById('bottomNav').style.display='none';
+  document.getElementById('main').innerHTML=`
+  <div class="auth-wrap">
+    <div class="auth-logo-big">
+      <h1>✦ MIO MEDIA</h1>
+      <p>Bagikan universemu kepada dunia ✨</p>
+    </div>
+    <div class="glass auth-box">
+      <h2 id="authTitle">LOGIN</h2>
+      <div class="auth-field">
+        <label>Username</label>
+        <input type="text" class="inp" id="authUser" placeholder="Masukkan username" maxlength="30" autocomplete="username">
+        <div class="field-err" id="errUser"></div>
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <input type="password" class="inp" id="authPass" placeholder="Masukkan password" maxlength="128" autocomplete="current-password">
+        <div class="field-err" id="errPass"></div>
+      </div>
+      <label class="auth-remember"><input type="checkbox" id="authRemember"> Ingat saya 30 hari</label>
+      <button class="btn btn-primary" id="authBtn" style="width:100%;margin-top:10px">🚀 Login</button>
+      <div class="auth-toggle" id="authToggle">Belum punya akun? <strong>Daftar sekarang</strong></div>
+    </div>
+  </div>`;
+  let isLogin=true;
+  const btn=document.getElementById('authBtn'),toggle=document.getElementById('authToggle'),title=document.getElementById('authTitle');
+  toggle.onclick=()=>{
+    isLogin=!isLogin;title.textContent=isLogin?'LOGIN':'DAFTAR';
+    btn.innerHTML=isLogin?'🚀 Login':'✨ Daftar';
+    toggle.innerHTML=isLogin?'Belum punya akun? <strong>Daftar sekarang</strong>':'Sudah punya akun? <strong>Login</strong>';
+    document.getElementById('errUser').classList.remove('show');
+    document.getElementById('errPass').classList.remove('show');
+  };
+  const doAuth=async()=>{
+    if(isSubmitting)return;
+    const u=document.getElementById('authUser').value.trim();
+    const p=document.getElementById('authPass').value;
+    const r=document.getElementById('authRemember').checked;
+    const eu=document.getElementById('errUser'),ep=document.getElementById('errPass');
+    eu.classList.remove('show');ep.classList.remove('show');
+    let ok=true;
+    if(!u){eu.textContent='Username wajib diisi';eu.classList.add('show');ok=false;}
+    else if(!isLogin&&!/^[a-zA-Z0-9_]{3,30}$/.test(u)){eu.textContent='3-30 karakter, huruf/angka/underscore';eu.classList.add('show');ok=false;}
+    if(!p){ep.textContent='Password wajib diisi';ep.classList.add('show');ok=false;}
+    else if(!isLogin&&p.length<8){ep.textContent='Minimal 8 karakter';ep.classList.add('show');ok=false;}
+    if(!ok)return;
+    isSubmitting=true;btn.disabled=true;btn.textContent=isLogin?'Memproses...':'Mendaftar...';
+    showLoad();
+    const d=await api(isLogin?'/api/login':'/api/register',{method:'POST',body:JSON.stringify({username:u,password:p,rememberMe:r})});
+    hideLoad();btn.disabled=false;btn.innerHTML=isLogin?'🚀 Login':'✨ Daftar';isSubmitting=false;
+    if(d?.success)await loadUser();
+    else toast(d?.error||(isLogin?'Login gagal':'Registrasi gagal'),'error');
+  };
+  btn.onclick=doAuth;
+  document.getElementById('authPass').addEventListener('keydown',e=>{if(e.key==='Enter')doAuth();});
+}
+
+// ══════════════════════════════════════════════
+// FEED
+// ══════════════════════════════════════════════
+async function renderFeed(){
+  document.getElementById('main').innerHTML='<div class="spin-wrap"><div class="spin-sm"></div> Memuat feed...</div>';
+  showLoad();
+  const d=await api('/api/feed');
+  hideLoad();
+  if(!d){document.getElementById('main').innerHTML='<div class="empty"><div class="empty-icon">⚠️</div><h3>Gagal memuat</h3></div>';return;}
+  const posts=d.posts.filter(p=>p.mediaType==='image'||p.mediaType==='video');
+  let html='<div class="feed-wrap">';
+  if(!posts.length){html+='<div class="empty"><div class="empty-icon">📷</div><h3>Belum ada postingan</h3><p>Follow teman untuk melihat postingan mereka</p></div>';}
+  posts.forEach(p=>{
+    const ma=p.mediaArray||[p];
+    if(p.musicUrl)initAudio(p.id,p.musicUrl);
+    const sid=escHtml(p.id),suid=escHtml(p.userId);
+    html+=`<div class="glass post-card" data-pid="${sid}" onclick="showPostDetail('${sid}')">
+      <div class="post-head" onclick="event.stopPropagation();goProfile('${suid}')">
+        <img class="post-avatar" src="${safeImg(p.userProfilePic)}" loading="lazy" alt="">
+        <div style="flex:1">
+          <div class="post-uname">${escHtml(p.username)}${p.isVerified?'<span class="vbadge">✓</span>':''}${p.isFromFollowing?'<span class="following-chip">✓ Following</span>':''}</div>
+          <div class="post-time">${timeAgo(p.createdAt)}</div>
+        </div>
+      </div>
+      <div class="post-media-wrap" id="pmw_${sid}" onclick="event.stopPropagation()">
+        ${ma.map((m,i)=>{const su=safeUrl(m.mediaUrl)||'';return`<div class="media-slide">${m.mediaType==='image'?`<img class="post-img" src="${escHtml(su)}" loading="lazy" onclick="safeOpen('${escHtml(su)}')" alt="">`: `<video class="post-vid" src="${escHtml(su)}" controls playsinline preload="metadata"></video>`}</div>`;}).join('')}
+        ${ma.length>1?`<div class="media-counter">1/${ma.length}</div><div class="media-dots" id="pd_${sid}">${ma.map((_,i)=>`<span class="mdot${i===0?' active':''}" onclick="scrollSlide('${sid}',${i})"></span>`).join('')}</div>`:''}
+        ${p.musicUrl?`<div class="music-pill" onclick="event.stopPropagation();toggleMusic('${sid}')">🎵 <span id="ms_${sid}">♪ Play</span></div>`:''}
+      </div>
+      ${p.caption?`<div class="post-caption">${escHtml(p.caption)}</div>`:''}
+      <div class="post-actions" onclick="event.stopPropagation()">
+        <button class="action-btn${p.isLiked?' liked':''}" onclick="likePost('${sid}')">❤️ <span class="lc_${sid}">${p.likesCount||0}</span></button>
+        <button class="action-btn" onclick="showComments('${sid}')">💬 <span class="cc_${sid}">${p.commentsCount||0}</span></button>
+      </div>
+    </div>`;
+  });
+  html+='</div>';
+  document.getElementById('main').innerHTML=html;
+  posts.forEach(p=>{if(p.mediaArray&&p.mediaArray.length>1)setupSlide(p.id);});
+}
+
+function setupSlide(pid){
+  const c=document.getElementById(`pmw_${pid}`);
+  const dots=document.querySelectorAll(`#pd_${pid} .mdot`);
+  if(c&&dots.length){
+    c.addEventListener('scroll',()=>{
+      const i=Math.round(c.scrollLeft/c.offsetWidth);
+      dots.forEach((d,j)=>d.classList.toggle('active',j===i));
+      const ct=c.querySelector('.media-counter');if(ct)ct.textContent=`${i+1}/${dots.length}`;
+    },{passive:true});
+  }
+}
+window.scrollSlide=function(pid,i){
+  const c=document.getElementById(`pmw_${pid}`);if(c)c.scrollTo({left:i*c.offsetWidth,behavior:'smooth'});
+};
+
+// ══════════════════════════════════════════════
+// POST DETAIL
+// ══════════════════════════════════════════════
+window.showPostDetail=async function(pid){
+  showLoad();
+  let post=null;
+  const fd=await api('/api/feed');post=fd?.posts?.find(p=>p.id===pid);
+  if(!post){const ed=await api('/api/explore');post=ed?.posts?.find(p=>p.id===pid);}
+  if(!post){hideLoad();return;}
+  currentPost=post;
+  const cd=await api(`/api/post/${pid}/comments`);
+  const comments=cd?.comments||[];
+  hideLoad();
+  const ma=post.mediaArray||[post];
+  const sid=escHtml(post.id),suid=escHtml(post.userId);
+  let html=`<div class="pd-head">
+    <img src="${safeImg(post.userProfilePic)}" onclick="goProfile('${suid}');closeModal('postDetailModal')" loading="lazy" alt="">
+    <div><div class="pd-uname" onclick="goProfile('${suid}');closeModal('postDetailModal')">${escHtml(post.username)}${post.isVerified?'<span class="vbadge">✓</span>':''}</div><div class="pd-time">${new Date(post.createdAt).toLocaleString('id-ID')}</div></div>
+  </div>
+  <div class="pd-media-wrap">${ma.map(m=>{const su=safeUrl(m.mediaUrl)||'';return`<div class="pd-media-item">${m.mediaType==='image'?`<img class="pd-media" src="${escHtml(su)}" alt="" loading="lazy">`: `<video class="pd-media" src="${escHtml(su)}" autoplay loop playsinline controls></video>`}</div>`;}).join('')}</div>
+  ${post.caption?`<div class="pd-caption">${escHtml(post.caption)}</div>`:''}
+  <div class="pd-actions">
+    <button class="action-btn${post.isLiked?' liked':''}" onclick="likePost('${sid}')">❤️ <span class="lc_${sid}">${post.likesCount||0}</span></button>
+    <button class="action-btn" onclick="document.getElementById('pdCommentInp').focus()">💬 <span class="cc_${sid}">${post.commentsCount||0}</span></button>
+  </div>
+  <div class="pd-stats"><span>${post.likesCount||0}</span> suka</div>
+  <div class="pd-comments" id="pdComments">
+    ${comments.length?comments.map(c=>`<div class="pd-comment"><img src="${safeImg(c.profilePic)}" onclick="goProfile('${escHtml(c.userId)}');closeModal('postDetailModal')" loading="lazy" alt=""><div class="pd-comment-bub"><div class="pd-comment-uname" onclick="goProfile('${escHtml(c.userId)}');closeModal('postDetailModal')">${escHtml(c.username)}${c.isVerified?'<span class="vbadge" style="width:13px;height:13px;font-size:8px">✓</span>':''}</div><div class="pd-comment-text">${escHtml(c.text)}</div></div></div>`).join(''):'<div style="text-align:center;padding:18px;color:var(--text-tertiary)">Belum ada komentar</div>'}
+  </div>
+  <div class="pd-add-comment"><input type="text" id="pdCommentInp" placeholder="Tambah komentar..." maxlength="1000"><button class="btn btn-primary btn-sm" onclick="addPdComment('${sid}')">Kirim</button></div>`;
+  document.getElementById('pdContent').innerHTML=html;
+  openModal('postDetailModal');
+};
+window.addPdComment=async function(pid){
+  const inp=document.getElementById('pdCommentInp');
+  const t=inp.value.trim();if(!t||isSubmitting)return;
+  isSubmitting=true;showLoad();
+  const r=await api(`/api/post/${pid}/comment`,{method:'POST',body:JSON.stringify({text:t})});
+  hideLoad();isSubmitting=false;
+  if(r){inp.value='';showPostDetail(pid);if(currentView==='feed')renderFeed();}
+  else toast('Gagal mengirim komentar','error');
+};
+
+// ══════════════════════════════════════════════
+// EXPLORE
+// ══════════════════════════════════════════════
+async function renderExplore(){
+  document.getElementById('main').innerHTML=`
+  <div class="explore-wrap">
+    <div class="glass search-box"><input type="text" class="inp" id="searchInp" placeholder="🔍 Cari pengguna..." maxlength="50"></div>
+    <div id="exploreGrid"></div>
+  </div>`;
+  showLoad();const d=await api('/api/explore');hideLoad();
+  const renderGrid=posts=>{
+    if(!posts?.length)return'<div class="empty"><div class="empty-icon">🌌</div><h3>Belum ada konten</h3></div>';
+    return`<div class="explore-grid">${posts.map(p=>{const su=safeUrl(p.mediaUrl)||'',sid=escHtml(p.id);return`<div class="exp-item" onclick="showPostDetail('${sid}')">
+      ${p.mediaType==='image'?`<img src="${escHtml(su)}" loading="lazy" alt="">`:`<video src="${escHtml(su)}" preload="metadata" muted playsinline></video>`}
+      ${p.mediaArray?.length>1?`<div class="exp-badge">${p.mediaArray.length}</div>`:''}
+    </div>`;}).join('')}</div>`;
+  };
+  document.getElementById('exploreGrid').innerHTML=renderGrid(d?.posts);
+  let debT;
+  document.getElementById('searchInp').addEventListener('input',async e=>{
+    clearTimeout(debT);const q=e.target.value.trim();
+    if(q.length<2){document.getElementById('exploreGrid').innerHTML=renderGrid(d?.posts);return;}
+    debT=setTimeout(async()=>{
+      showLoad();const r=await api(`/api/search?q=${encodeURIComponent(q)}`);hideLoad();
+      if(r?.users?.length){
+        let html='<div class="search-list">';
+        r.users.forEach(u=>{html+=`<div class="glass search-item" onclick="goProfile('${escHtml(u.id)}')"><img src="${safeImg(u.profilePic)}" loading="lazy" alt=""><div><strong>${escHtml(u.username)}${u.isVerified?'<span class="vbadge">✓</span>':''}</strong>${u.bio?`<small>${escHtml(u.bio.substring(0,45))}</small>`:''}</div></div>`;});
+        html+='</div>';document.getElementById('exploreGrid').innerHTML=html;
+      }else{document.getElementById('exploreGrid').innerHTML='<div class="empty"><div class="empty-icon">🔍</div><h3>Tidak ditemukan</h3></div>';}
+    },300);
+  });
+}
+
+// ══════════════════════════════════════════════
+// LIKE
+// ══════════════════════════════════════════════
+async function likePost(pid){
+  showLoad();const r=await api(`/api/post/${pid}/like`,{method:'POST'});hideLoad();
+  if(!r)return;
+  document.querySelectorAll(`.lc_${pid}`).forEach(el=>el.textContent=r.likesCount);
+  const card=document.querySelector(`[data-pid="${pid}"] .action-btn`);
+  if(card)card.classList.toggle('liked',r.liked);
+}
+
+// ══════════════════════════════════════════════
+// COMMENTS
+// ══════════════════════════════════════════════
+async function showComments(pid){
+  commentsPostId=pid;commentMediaFile=null;removeCommentMedia();
+  document.getElementById('commentMediaFile').onchange=handleCommentMedia;
+  showLoad();const d=await api(`/api/post/${pid}/comments`);hideLoad();
+  let html='';
+  if(d?.comments?.length){
+    d.comments.forEach(c=>{
+      html+=`<div class="comment-item"><img src="${safeImg(c.profilePic)}" onclick="goProfile('${escHtml(c.userId)}')" loading="lazy" alt=""><div class="comment-bub"><div class="comment-uname" onclick="goProfile('${escHtml(c.userId)}')">${escHtml(c.username)}${c.isVerified?'<span class="vbadge" style="width:13px;height:13px;font-size:8px">✓</span>':''}</div>`;
+      if(c.text)html+=`<div class="comment-text">${escHtml(c.text)}</div>`;
+      if(c.mediaUrl){const su=safeUrl(c.mediaUrl)||'';if(su)html+=`<div class="comment-media-wrap">${c.mediaType==='image'?`<img src="${escHtml(su)}" onclick="safeOpen('${escHtml(su)}')" loading="lazy" alt="">`: `<video src="${escHtml(su)}" controls preload="metadata"></video>`}</div>`;}
+      html+=`<div class="comment-time">${fmtTime(c.createdAt)}</div></div></div>`;
+    });
+  }else{html='<div class="empty"><p>Belum ada komentar 💬</p></div>';}
+  document.getElementById('commentsBody').innerHTML=html;
+  openModal('commentsModal');
+}
+document.getElementById('submitCommentBtn').onclick=async()=>{
+  const inp=document.getElementById('commentInp');const t=inp.value.trim();
+  if((!t&&!commentMediaFile)||!commentsPostId||isSubmitting)return;
+  isSubmitting=true;showLoad();
+  const r=await api(`/api/post/${commentsPostId}/comment`,{method:'POST',body:JSON.stringify({text:t,mediaUrl:commentMediaFile?.url,mediaType:commentMediaFile?.type})});
+  hideLoad();isSubmitting=false;
+  if(r){inp.value='';removeCommentMedia();showComments(commentsPostId);if(currentView==='feed')renderFeed();}
+  else toast('Gagal mengirim komentar','error');
+};
+async function handleCommentMedia(e){
+  const f=e.target.files[0];if(!f)return;
+  const err=validateFile(f,[...MIME_IMG,...MIME_VID],2);if(err){toast(err,'error');e.target.value='';return;}
+  const r=new FileReader();
+  r.onload=ev=>{
+    const ip=document.getElementById('commentPrevImg'),vp=document.getElementById('commentPrevVid');
+    if(f.type.startsWith('image/')){ip.src=ev.target.result;ip.style.display='block';vp.style.display='none';}
+    else{vp.src=ev.target.result;vp.style.display='block';ip.style.display='none';}
+    document.getElementById('commentMediaPrev').style.display='block';
+  };r.readAsDataURL(f);
+  const fd=new FormData();fd.append('media',f);
+  showLoad();const res=await apiForm('/api/comment/upload-media',fd);hideLoad();
+  if(res?.success)commentMediaFile={url:res.mediaUrl,type:res.mediaType};
+  else{toast('Gagal upload stiker','error');removeCommentMedia();}
+}
+function removeCommentMedia(){
+  commentMediaFile=null;
+  document.getElementById('commentMediaPrev').style.display='none';
+  document.getElementById('commentMediaFile').value='';
+}
+
+// ══════════════════════════════════════════════
+// UPLOAD
+// ══════════════════════════════════════════════
+function renderUpload(){
+  selectedFiles=[];selectedMusic=null;
+  document.getElementById('main').innerHTML=`
+  <div class="upload-wrap">
+    <div class="glass upload-box">
+      <h2>✦ Post Baru</h2>
+      <textarea class="inp" id="captionInp" placeholder="Tulis caption yang menarik..." rows="3" maxlength="2200"></textarea>
+      <div class="drop-zone" onclick="document.getElementById('mediaInp').click()">
+        <div class="drop-zone-icon">🌌</div>
+        <p>Pilih foto / video<br><small style="font-size:11px;opacity:.65">JPG PNG GIF WEBP MP4 · Max 100MB · 5 file</small></p>
+        <input type="file" id="mediaInp" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,video/mp4,video/webm" multiple style="display:none" onchange="handleMedia(event)">
+      </div>
+      <div class="file-previews" id="filePrevs"></div>
+      <div class="music-zone" onclick="document.getElementById('musicInp').click()">
+        <span style="font-size:18px">🎵</span>
+        <span class="music-name" id="musicName">Tambah musik latar (opsional)</span>
+        <input type="file" id="musicInp" accept="audio/mpeg,audio/mp3,audio/wav,audio/ogg,audio/mp4,audio/aac" style="display:none" onchange="handleMusic(event)">
+        <button id="rmMusicBtn" onclick="event.stopPropagation();removeMusic()" style="display:none;background:var(--danger);color:#fff;border:none;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:13px">×</button>
+      </div>
+      <button class="btn btn-primary" id="uploadBtn" onclick="doUpload()" style="width:100%;margin-top:14px;font-size:15px;padding:14px">🚀 Upload Sekarang</button>
+    </div>
+  </div>`;
+}
+window.handleMedia=function(e){
+  const files=Array.from(e.target.files);
+  if(files.length+selectedFiles.length>5){toast('Maksimal 5 file!','warning');e.target.value='';return;}
+  for(const f of files){const err=validateFile(f,[...MIME_IMG,...MIME_VID],100);if(err){toast(err,'error');e.target.value='';return;}selectedFiles.push(f);}
+  renderFilePrevs();
+};
+function renderFilePrevs(){
+  const c=document.getElementById('filePrevs');
+  if(!selectedFiles.length){c.innerHTML='';return;}
+  c.innerHTML=selectedFiles.map((f,i)=>{
+    const url=URL.createObjectURL(f),ft=f.type.startsWith('image/')?'image':'video';
+    return`<div class="file-prev-item">${ft==='image'?`<img src="${url}" alt="">`: `<video src="${url}" muted></video>`}<span>${escHtml(f.name.substring(0,25))}</span><button onclick="removeFile(${i})">×</button></div>`;
+  }).join('');
+}
+window.removeFile=function(i){selectedFiles.splice(i,1);renderFilePrevs();};
+window.handleMusic=function(e){
+  const f=e.target.files[0];if(!f)return;
+  const err=validateFile(f,MIME_AUD,10);if(err){toast(err,'error');e.target.value='';return;}
+  selectedMusic=f;document.getElementById('musicName').textContent=f.name;
+  document.getElementById('rmMusicBtn').style.display='inline-flex';
+};
+window.removeMusic=function(){selectedMusic=null;document.getElementById('musicName').textContent='Tambah musik latar (opsional)';document.getElementById('rmMusicBtn').style.display='none';document.getElementById('musicInp').value='';};
+window.doUpload=async function(){
+  if(isSubmitting||!selectedFiles.length){if(!selectedFiles.length)toast('Pilih minimal 1 file!','warning');return;}
+  const caption=document.getElementById('captionInp').value;
+  const fd=new FormData();
+  selectedFiles.forEach((f,i)=>fd.append(`media${i}`,f));
+  fd.append('fileCount',selectedFiles.length);fd.append('caption',caption);
+  if(selectedMusic)fd.append('music',selectedMusic);
+  const btn=document.getElementById('uploadBtn');
+  isSubmitting=true;btn.disabled=true;btn.textContent='⏳ Mengupload...';
+  showLoad();
+  const r=await apiForm('/api/upload',fd);
+  hideLoad();isSubmitting=false;btn.disabled=false;btn.innerHTML='🚀 Upload Sekarang';
+  if(r?.success){if(r.leveledUp)showLevelUp(r.newLevel,'🎉');toast('Upload berhasil! +50 XP 🎉','success');navigate('feed');}
+  else toast(r?.error||'Upload gagal','error');
+};
+
+// ══════════════════════════════════════════════
+// LEADERBOARD
+// ══════════════════════════════════════════════
+async function renderLeaderboard(){
+  document.getElementById('main').innerHTML=`
+  <div class="lb-wrap">
+    <div class="lb-tabs"><button class="lb-tab active" data-lt="all">🏆 Semua</button><button class="lb-tab" data-lt="dev">👑 Developer</button></div>
+    <div id="lbContent"><div class="spin-wrap"><div class="spin-sm"></div>Memuat...</div></div>
+  </div>`;
+  document.querySelectorAll('.lb-tab').forEach(t=>t.onclick=()=>{
+    document.querySelectorAll('.lb-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');loadLbData(t.dataset.lt);
+  });
+  await loadLbData('all');
+}
+async function loadLbData(type){
+  showLoad();const d=await api('/api/leaderboard');hideLoad();
+  if(!d?.success){document.getElementById('lbContent').innerHTML='<div class="empty"><h3>Gagal memuat</h3></div>';return;}
+  const users=type==='dev'?d.topDevelopers:d.topUsers;
+  let html=`<div class="glass lb-rank-card"><div class="lb-rank-num">#${d.currentUserRank}</div><div class="lb-rank-sub">Peringkat kamu dari ${d.totalUsers} pengguna</div></div>
+  <div class="glass lb-list">
+    <div class="lb-head"><div class="lbh-rank">#</div><div class="lbh-user">User</div><div class="lbh-lv">Level</div><div class="lbh-xp">XP</div><div class="lbh-posts">Post</div></div>`;
+  users.forEach((u,i)=>{
+    const r=i+1,medal=r===1?'🥇':r===2?'🥈':r===3?'🥉':r;
+    const mc2=r===1?'m1':r===2?'m2':r===3?'m3':'';
+    html+=`<div class="lb-item${u.userId===currentUser.id?' me':''}" onclick="goProfile('${escHtml(u.userId)}')">
+      <div class="lb-rank ${mc2}">${medal}</div>
+      <div class="lb-user"><img src="${safeImg(u.profilePic)}" loading="lazy" alt=""><div class="lb-uname">${escHtml(u.username)}${u.isVerified?'<span class="vbadge">✓</span>':''}</div></div>
+      <div class="lb-lv">Lv.${u.level}</div>
+      <div class="lb-xp">${u.xp.toLocaleString()}</div>
+      <div class="lb-posts">${u.totalPosts}</div>
+    </div>`;
+  });
+  html+='</div>';document.getElementById('lbContent').innerHTML=html;
+}
+
+// ══════════════════════════════════════════════
+// CHAT LIST
+// ══════════════════════════════════════════════
+async function renderChatList(){
+  document.getElementById('main').innerHTML=`
+  <div class="chat-wrap">
+    <div class="glass chat-top"><h2>💬 Pesan</h2><button class="btn btn-primary btn-sm" onclick="showNewChat()">✏️ Baru</button></div>
+    <div id="convListEl"><div class="spin-wrap"><div class="spin-sm"></div>Memuat...</div></div>
+  </div>`;
+  showLoad();const d=await api('/api/chat/conversations');hideLoad();
+  const el=document.getElementById('convListEl');
+  if(!d?.conversations?.length){el.innerHTML=`<div class="empty"><div class="empty-icon">💬</div><h3>Belum ada percakapan</h3><p>Mulai chat dengan pengguna lain</p><button class="btn btn-primary" style="margin-top:12px" onclick="showNewChat()">✉️ Mulai Chat</button></div>`;return;}
+  let html='<div class="conv-list">';
+  d.conversations.forEach(c=>{
+    const u=c.otherUser,last=c.lastMessage,has=c.unreadCount>0;
+    let lt=last?(last.mediaType?'📎 Media':escHtml(last.text.substring(0,36))):'Mulai percakapan';
+    html+=`<div class="glass conv-item${has?' unread':''}" onclick="openChat('${escHtml(c.id)}','${escHtml(u.id)}')">
+      <div class="conv-ava"><img src="${safeImg(u.profilePic)}" loading="lazy" alt="${escHtml(u.username)}"></div>
+      <div class="conv-info">
+        <div class="conv-top2"><div class="conv-name">${escHtml(u.username)}${u.isVerified?'<span class="vbadge" style="width:14px;height:14px;font-size:8px">✓</span>':''}</div><div class="conv-time">${last?timeAgo(last.createdAt):''}</div></div>
+        <div class="conv-last${has?' bold':''}">${last&&last.senderId===currentUser.id?'<span style="color:var(--text-tertiary)">Kamu: </span>':''}${lt}</div>
+      </div>
+      ${has?`<div class="unread-pill">${c.unreadCount}</div>`:''}
+    </div>`;
+  });
+  html+='</div>';el.innerHTML=html;
+  updateChatBadge();
+}
+window.openChat=async function(cid,uid){
+  if(!cid&&uid){showLoad();const r=await api(`/api/chat/with/${uid}`);hideLoad();if(!r)return;cid=r.conversationId;chatOtherUser=r.otherUser;}
+  else if(cid&&!chatOtherUser){showLoad();const cd=await api('/api/chat/conversations');hideLoad();const c=cd?.conversations?.find(x=>x.id===cid);if(c)chatOtherUser=c.otherUser;}
+  convId=cid;renderChatRoom();
+};
+function renderChatRoom(){
+  const u=chatOtherUser;if(!u)return;
+  document.getElementById('main').innerHTML=`
+  <div class="glass chat-room" id="chatRoom">
+    <div class="chat-room-head">
+      <button class="chat-back" onclick="navigate('chat')">←</button>
+      <img class="chat-room-ava" src="${safeImg(u.profilePic)}" onclick="goProfile('${escHtml(u.id)}')" loading="lazy" alt="">
+      <div class="chat-room-info">
+        <div class="chat-room-uname" onclick="goProfile('${escHtml(u.id)}')">${escHtml(u.username)}${u.isVerified?'<span class="vbadge" style="width:14px;height:14px;font-size:8px">✓</span>':''}</div>
+        <div class="chat-room-status">● Online</div>
+      </div>
+      <button onclick="goProfile('${escHtml(u.id)}')" style="background:none;border:none;font-size:16px;cursor:pointer;color:var(--text-secondary);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center">👤</button>
+    </div>
+    <div class="chat-msgs" id="chatMsgs"><div class="spin-wrap"><div class="spin-sm"></div>Memuat pesan...</div></div>
+    <div class="chat-input-area">
+      <div id="chatMedPrev" style="display:none" class="chat-media-prev">
+        <img id="chatPrevImg" style="display:none" alt=""><video id="chatPrevVid" style="display:none" muted></video>
+        <button class="chat-del-media" onclick="removeChatMedia()">×</button>
+      </div>
+      <div class="chat-row">
+        <input type="file" id="chatFileInp" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,video/mp4,video/webm,audio/mpeg,audio/mp3,audio/ogg" style="display:none" onchange="handleChatMedia(event)">
+        <button class="chat-attach" onclick="document.getElementById('chatFileInp').click()">📎</button>
+        <textarea class="chat-inp" id="chatInp" placeholder="Tulis pesan..." rows="1" onkeydown="chatKey(event)" maxlength="2000"></textarea>
+        <button class="chat-send" onclick="sendChat()" id="chatSendBtn">➤</button>
+      </div>
+    </div>
+  </div>`;
+  loadChatMsgs(true);
+  stopChatPoll();chatPoll=setInterval(()=>loadChatMsgs(false),3000);
+  document.getElementById('chatInp').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,96)+'px';});
+}
+async function loadChatMsgs(scroll=true){
+  if(!convId)return;
+  const d=await api(`/api/chat/${convId}/messages`);
+  if(!d?.messages)return;
+  if(d.messages.length===lastMsgCount&&!scroll)return;
+  lastMsgCount=d.messages.length;
+  const c=document.getElementById('chatMsgs');if(!c){stopChatPoll();return;}
+  let html='',ld=null;
+  d.messages.forEach(m=>{
+    const md=new Date(m.createdAt).toDateString();
+    if(md!==ld){html+=`<div class="date-sep"><span>${escHtml(fmtDate(m.createdAt))}</span></div>`;ld=md;}
+    const mine=m.senderId===currentUser.id,del=m.deleted;
+    const sm=escHtml(m.id),ss=escHtml(m.senderId);
+    const su=safeUrl(m.mediaUrl);
+    html+=`<div class="msg-row ${mine?'mine':'theirs'}" data-mid="${sm}">
+      ${!mine?`<img class="msg-ava" src="${safeImg(m.senderProfilePic)}" onclick="goProfile('${ss}')" loading="lazy" alt="">`:''}
+      <div class="msg-bwrap">
+        <div class="msg-bubble${del?' msg-deleted':''}">
+          ${del?'<span class="msg-text" style="font-style:italic;opacity:.55">🚫 Dihapus</span>':m.text?`<div class="msg-text">${escHtml(m.text)}</div>`:''}
+          ${!del&&su?`<div class="msg-media">${m.mediaType==='image'?`<img src="${escHtml(su)}" onclick="safeOpen('${escHtml(su)}')" loading="lazy" alt="">`:m.mediaType==='video'?`<video src="${escHtml(su)}" controls preload="metadata"></video>`:m.mediaType==='audio'?`<audio src="${escHtml(su)}" controls style="width:100%;border-radius:7px"></audio>`:''}</div>`:''}
+        </div>
+        <div class="msg-meta">
+          <span class="msg-time">${escHtml(fmtTime(m.createdAt))}</span>
+          ${mine&&!del?`<span class="msg-tick${m.isRead?' read':''}">${m.isRead?'✓✓':'✓'}</span>`:''}
+          ${mine&&!del?`<button class="msg-del" onclick="delChatMsg('${sm}')">🗑</button>`:''}
+        </div>
+      </div>
+    </div>`;
+  });
+  if(!html)html='<div style="text-align:center;padding:36px;color:var(--text-tertiary);font-size:13px">👋 Mulai percakapan!</div>';
+  c.innerHTML=html;
+  if(scroll||d.messages.length!==lastMsgCount)c.scrollTop=c.scrollHeight;
+  updateChatBadge();
+}
+window.chatKey=function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}};
+window.handleChatMedia=async function(e){
+  const f=e.target.files[0];if(!f)return;
+  const err=validateFile(f,[...MIME_IMG,...MIME_VID,...MIME_AUD],10);if(err){toast(err,'error');e.target.value='';return;}
+  const r=new FileReader();
+  r.onload=ev=>{
+    const ip=document.getElementById('chatPrevImg'),vp=document.getElementById('chatPrevVid');
+    if(f.type.startsWith('image/')){ip.src=ev.target.result;ip.style.display='block';vp.style.display='none';}
+    else if(f.type.startsWith('video/')){vp.src=ev.target.result;vp.style.display='block';ip.style.display='none';}
+    else{ip.style.display='none';vp.style.display='none';}
+    document.getElementById('chatMedPrev').style.display='inline-block';
+  };r.readAsDataURL(f);
+  const fd=new FormData();fd.append('media',f);
+  showLoad();const res=await apiForm('/api/chat/upload-media',fd);hideLoad();
+  if(res?.success)chatMediaFile={url:res.mediaUrl,type:res.mediaType};
+  else{toast('Gagal upload media','error');removeChatMedia();}
+};
+window.removeChatMedia=function(){chatMediaFile=null;document.getElementById('chatMedPrev').style.display='none';document.getElementById('chatFileInp').value='';};
+window.sendChat=async function(){
+  if(!convId||isSubmitting)return;
+  const inp=document.getElementById('chatInp'),t=inp.value.trim();
+  if(!t&&!chatMediaFile)return;
+  const btn=document.getElementById('chatSendBtn');
+  isSubmitting=true;btn.disabled=true;
+  const r=await api(`/api/chat/${convId}/send`,{method:'POST',body:JSON.stringify({text:t,mediaUrl:chatMediaFile?.url,mediaType:chatMediaFile?.type})});
+  btn.disabled=false;isSubmitting=false;
+  if(r?.success){inp.value='';inp.style.height='auto';removeChatMedia();chatMediaFile=null;lastMsgCount=0;await loadChatMsgs(true);}
+  else toast('Gagal mengirim pesan','error');
+};
+window.delChatMsg=async function(mid){
+  if(!confirm('Hapus pesan ini?'))return;
+  const r=await api(`/api/chat/message/${mid}`,{method:'DELETE'});
+  if(r?.success){lastMsgCount=0;await loadChatMsgs(false);}
+  else toast('Gagal hapus pesan','error');
+};
+function showNewChat(){
+  openModal('newChatModal');
+  document.getElementById('newChatSearch').value='';
+  document.getElementById('newChatRes').innerHTML='<div class="empty"><p style="font-size:12px;color:var(--text-tertiary)">Ketik nama untuk mencari</p></div>';
+  setTimeout(()=>document.getElementById('newChatSearch').focus(),200);
+}
+let ncs;
+document.getElementById('newChatSearch').addEventListener('input',async function(){
+  clearTimeout(ncs);const q=this.value.trim(),el=document.getElementById('newChatRes');
+  if(q.length<2){el.innerHTML='<div class="empty"><p style="font-size:12px;color:var(--text-tertiary)">Ketik nama untuk mencari</p></div>';return;}
+  ncs=setTimeout(async()=>{
+    const d=await api(`/api/search?q=${encodeURIComponent(q)}`);
+    if(!d?.users?.length){el.innerHTML='<div class="empty"><p style="font-size:12px;color:var(--text-tertiary)">Tidak ditemukan</p></div>';return;}
+    let html='';
+    d.users.filter(u=>u.id!==currentUser.id).forEach(u=>{
+      html+=`<div onclick="startChat('${escHtml(u.id)}')" style="cursor:pointer;display:flex;align-items:center;gap:12px;padding:11px;border-radius:14px;transition:.2s" onmouseover="this.style.background='rgba(167,139,250,.09)'" onmouseout="this.style.background='transparent'">
+        <img src="${safeImg(u.profilePic)}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)" loading="lazy" alt="">
+        <div><strong style="font-size:14px;color:var(--text-primary);display:flex;align-items:center;gap:3px">${escHtml(u.username)}${u.isVerified?'<span class="vbadge">✓</span>':''}</strong>${u.bio?`<small style="font-size:11px;color:var(--text-tertiary)">${escHtml(u.bio.substring(0,38))}</small>`:''}</div>
+      </div>`;
+    });
+    el.innerHTML=html||'<div class="empty"><p>Tidak ditemukan</p></div>';
+  },300);
+});
+window.startChat=async function(uid){
+  closeModal('newChatModal');showLoad();
+  const r=await api(`/api/chat/with/${uid}`);hideLoad();
+  if(!r)return;
+  convId=r.conversationId;chatOtherUser=r.otherUser;
+  currentView='chat';
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.view==='chat'));
+  const m=document.getElementById('main');m.style.opacity='0';
+  setTimeout(()=>{renderChatRoom();m.style.opacity='1';},180);
+};
+window.startChatWithUser=window.startChat;
+
+// ══════════════════════════════════════════════
+// PROFILE
+// ══════════════════════════════════════════════
+async function renderProfile(uid){
+  document.getElementById('main').innerHTML='<div class="spin-wrap"><div class="spin-sm"></div>Memuat profil...</div>';
+  showLoad();
+  const p=await api(`/api/profile/${uid}`);
+  if(!p){hideLoad();return navigate('feed');}
+  const own=uid===currentUser.id;
+  let badges='';
+  if(p.badges?.length)badges='<div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:7px 0">'+p.badges.map(b=>`<span class="cbadge" style="background:${escHtml(b.color)}20;color:${escHtml(b.color)};border:1px solid ${escHtml(b.color)}">${escHtml(b.icon)} ${escHtml(b.name)}</span>`).join('')+'</div>';
+  const ws=p.wallpaperSettings||{type:'image',value:p.wallpaper,blur:false};
+  const sw=safeUrl(ws.value)||'';
+  const isVid=sw&&(sw.endsWith('.mp4')||sw.endsWith('.webm'));
+  let wallHtml='';
+  if(isVid)wallHtml=`<video class="profile-wallpaper-video" src="${escHtml(sw)}" autoplay loop muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>`;
+  else if(ws.type==='image'&&sw)wallHtml=`<div style="width:100%;height:100%;background:url('${escHtml(sw)}') center/cover${ws.blur?';filter:blur(8px);transform:scale(1.05)':''}"></div>`;
+  else if((ws.type==='color'||ws.type==='gradient')&&ws.value)wallHtml=`<div style="width:100%;height:100%;background:${escHtml(ws.value)}${ws.blur?';filter:blur(8px)':''}"></div>`;
+  else wallHtml=`<div style="width:100%;height:100%;background:linear-gradient(135deg,#0d0d3b,#1a0a2e,#0d1a3b)"></div>`;
+  const suid=escHtml(uid);
+  let html=`<div class="profile-wrap">
+    <div class="glass profile-card">
+      <div class="profile-wall" style="position:relative;height:150px;overflow:hidden">${wallHtml}</div>
+      <div class="profile-body">
+        <div class="profile-ava-wrap"><img class="profile-ava" src="${safeImg(p.profilePic)}" alt="" loading="lazy">${p.isVerified?'<div class="profile-vsticker">✓</div>':''}</div>
+        <div class="profile-name-row"><span class="profile-uname">${escHtml(p.username)}</span>${p.isVerified?'<span class="vbadge">✓</span>':''}${p.isAdmin?'<span class="abadge">👑 Developer</span>':''}</div>
+        <div class="profile-bio">${escHtml(p.bio||'Belum ada bio')}</div>
+        <div class="level-bar-wrap">
+          <div class="level-bar-top"><span>${escHtml(p.levelIcon||'⭐')} Lv.${p.level||1} ${escHtml(p.levelName||'Newbie')}</span><span>${p.xp||0} XP</span></div>
+          <div class="level-track"><div class="level-fill" style="width:${p.xpProgress||0}%"></div></div>
+        </div>
+        ${badges}
+        <div class="profile-stats">
+          <div class="stat-chip"><span class="stat-num">${p.posts||0}</span><span class="stat-lbl">POSTS</span></div>
+          <div class="stat-chip"><span class="stat-num">${p.followers||0}</span><span class="stat-lbl">FOLLOWERS</span></div>
+          <div class="stat-chip"><span class="stat-num">${p.following||0}</span><span class="stat-lbl">FOLLOWING</span></div>
+          <div class="stat-chip"><span class="stat-num">${p.totalLikes||0}</span><span class="stat-lbl">SUKA</span></div>
+        </div>
+        <div class="profile-btns">`;
+  if(own){
+    html+=`<button class="btn btn-ghost" onclick="showEditProfile()" style="flex:1">✏️ Edit</button>`;
+    if(currentUser.isAdmin)html+=`<button class="btn btn-primary" onclick="showAdminPanel()" style="flex:1">👑 Panel</button>`;
+  }else{
+    html+=`<button class="btn btn-primary${p.isFollowing?' btn-ghost':''}" onclick="doFollow('${suid}')" id="followBtn" style="flex:1">${p.isFollowing?'✓ Following':'+ Follow'}</button>`;
+    html+=`<button class="btn btn-ghost" onclick="startChatWithUser('${suid}')" style="flex:1">💬 Pesan</button>`;
+  }
+  html+=`</div></div></div><div id="profilePostsGrid"></div></div>`;
+  document.getElementById('main').innerHTML=html;
+  const v=document.querySelector('.profile-wallpaper-video');if(v)v.play().catch(()=>{});
+  const pd=await api(`/api/user/${uid}/posts`);hideLoad();
+  if(pd?.posts){
+    let ph=`<div class="glass" style="padding:14px"><div class="posts-grid">`;
+    pd.posts.forEach(post=>{
+      const su=safeUrl(post.mediaUrl)||'',sp=escHtml(post.id);
+      ph+=`<div class="grid-item" onclick="showPostDetail('${sp}')">
+        ${post.mediaType==='image'?`<img src="${escHtml(su)}" loading="lazy" alt="">`: `<video src="${escHtml(su)}" preload="metadata" muted playsinline></video>`}
+        ${post.mediaArray?.length>1?`<div class="exp-badge">${post.mediaArray.length}</div>`:''}
+      </div>`;
+    });
+    ph+='</div></div>';document.getElementById('profilePostsGrid').innerHTML=ph;
+  }
+}
+async function doFollow(uid){showLoad();const r=await api(`/api/user/${uid}/follow`,{method:'POST'});hideLoad();if(r)renderProfile(uid);}
+window.goProfile=function(uid){currentProfileId=uid;stopChatPoll();renderProfile(uid);};
+
+// ══════════════════════════════════════════════
+// EDIT PROFILE / WALLPAPER
+// ══════════════════════════════════════════════
+async function showEditProfile(){
+  document.getElementById('epBio').value=currentUser.bio||'';
+  document.getElementById('epAva').src=safeImg(currentUser.profilePic);
+  document.getElementById('bioCount').textContent=(currentUser.bio||'').length;
+  document.getElementById('epBio').oninput=function(){document.getElementById('bioCount').textContent=Math.min(this.value.length,150);};
+  wTempFile=null;await loadWallSettings();openModal('editProfileModal');
+}
+function initWallUI(){
+  document.querySelectorAll('[data-wtab]').forEach(t=>{
+    t.onclick=()=>{
+      document.querySelectorAll('[data-wtab]').forEach(x=>x.classList.remove('active'));t.classList.add('active');
+      wType=t.dataset.wtab;
+      document.getElementById('wtabImage').style.display=wType==='image'?'block':'none';
+      document.getElementById('wtabColor').style.display=wType==='color'?'block':'none';
+      document.getElementById('wtabGradient').style.display=wType==='gradient'?'block':'none';
+      updateWallPrev();
+    };
+  });
+  document.querySelectorAll('.color-opt').forEach(o=>o.onclick=()=>{document.querySelectorAll('.color-opt').forEach(x=>x.classList.remove('sel'));o.classList.add('sel');wValue=o.dataset.color;updateWallPrev();});
+  document.getElementById('customColor').onchange=function(){document.querySelectorAll('.color-opt').forEach(x=>x.classList.remove('sel'));wValue=this.value;updateWallPrev();};
+  document.querySelectorAll('.grad-opt').forEach(o=>o.onclick=()=>{document.querySelectorAll('.grad-opt').forEach(x=>x.classList.remove('sel'));o.classList.add('sel');wValue=o.dataset.grad;updateWallPrev();});
+  document.getElementById('wallFile').onchange=async function(e){
+    const f=e.target.files[0];if(!f)return;
+    const err=validateFile(f,[...MIME_IMG,...MIME_VID],20);if(err){toast(err,'error');e.target.value='';return;}
+    wTempFile=f;
+    const r=new FileReader();
+    r.onload=ev=>{
+      wValue=ev.target.result;wType='image';updateWallPrev();
+      const wi=document.getElementById('wallFileImg'),wv=document.getElementById('wallFileVid');
+      if(f.type.startsWith('image/')){wi.src=ev.target.result;wi.style.display='block';wv.style.display='none';}
+      else{wv.src=ev.target.result;wv.style.display='block';wi.style.display='none';wv.play().catch(()=>{});}
+      document.getElementById('wallFilePrev').style.display='block';
+    };r.readAsDataURL(f);
+  };
+  document.getElementById('epAvaFile').onchange=function(e){
+    if(e.target.files[0]){
+      const err=validateFile(e.target.files[0],MIME_IMG,10);if(err){toast(err,'error');e.target.value='';return;}
+      document.getElementById('epAva').src=URL.createObjectURL(e.target.files[0]);
+    }
+  };
+}
+function toggleBlur(){wBlur=!wBlur;document.getElementById('blurSw').classList.toggle('on',wBlur);updateWallPrev();}
+function updateWallPrev(){
+  const a=document.getElementById('wallPrev');if(!a)return;
+  a.innerHTML='<div class="wall-prev-overlay"><span>Preview</span></div>';
+  a.style.background='';a.style.filter='';a.style.transform='';
+  const isVid=wType==='image'&&wValue&&(wTempFile?.type?.startsWith('video/')||wValue.endsWith('.mp4')||wValue.endsWith('.webm'));
+  if(isVid){const v=document.createElement('video');v.src=wValue;v.autoplay=true;v.loop=true;v.muted=true;v.playsInline=true;v.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover';if(wBlur){v.style.filter='blur(8px)';v.style.transform='scale(1.05)';}a.appendChild(v);v.play().catch(()=>{});}
+  else if(wType==='image'&&wValue){a.style.backgroundImage=`url('${wValue}')`;a.style.backgroundSize='cover';a.style.backgroundPosition='center';if(wBlur){a.style.filter='blur(8px)';a.style.transform='scale(1.05)';}}
+  else if((wType==='color'||wType==='gradient')&&wValue){a.style.background=wValue;if(wBlur)a.style.filter='blur(8px)';}
+  else a.style.background='linear-gradient(135deg,#0d0d3b,#1a0a2e)';
+}
+async function loadWallSettings(){
+  const d=await api('/api/profile/wallpaper');
+  if(d?.success&&d.settings){
+    wType=d.settings.type||'image';wValue=d.settings.value||'';wBlur=d.settings.blur||false;
+    document.getElementById('blurSw').classList.toggle('on',wBlur);
+    document.querySelectorAll('[data-wtab]').forEach(t=>t.classList.toggle('active',t.dataset.wtab===wType));
+    document.getElementById('wtabImage').style.display=wType==='image'?'block':'none';
+    document.getElementById('wtabColor').style.display=wType==='color'?'block':'none';
+    document.getElementById('wtabGradient').style.display=wType==='gradient'?'block':'none';
+    if(wType==='color')document.querySelectorAll('.color-opt').forEach(o=>o.classList.toggle('sel',o.dataset.color===wValue));
+    else if(wType==='gradient')document.querySelectorAll('.grad-opt').forEach(o=>o.classList.toggle('sel',o.dataset.grad===wValue));
+    updateWallPrev();
+  }
+}
+async function saveWallSettings(){
+  let val=wValue;
+  if(wTempFile&&wType==='image'){
+    const fd=new FormData();fd.append('wallpaper',wTempFile);
+    const r=await apiForm('/api/profile/upload-wallpaper',fd);
+    if(r?.success)val=r.wallpaperUrl;else{toast('Gagal upload wallpaper','error');return false;}
+  }
+  return await api('/api/profile/wallpaper',{method:'POST',body:JSON.stringify({wallpaperType:wType,wallpaperValue:val,blur:wBlur})});
+}
+document.getElementById('saveProfileBtn').onclick=async()=>{
+  if(isSubmitting)return;
+  const bio=document.getElementById('epBio').value.substring(0,150);
+  const pic=document.getElementById('epAvaFile').files[0];
+  if(pic){const err=validateFile(pic,MIME_IMG,10);if(err){toast(err,'error');return;}}
+  isSubmitting=true;showLoad();
+  await api('/api/profile/update',{method:'POST',body:JSON.stringify({bio})});
+  if(pic){const fd=new FormData();fd.append('profilePic',pic);await apiForm('/api/profile/upload-pic',fd);}
+  await saveWallSettings();
+  hideLoad();isSubmitting=false;
+  await loadUser();
+  if(currentView==='profile')renderProfile(currentUser.id);
+  closeModal('editProfileModal');toast('Profil berhasil disimpan! ✨','success');
+};
+
+// ══════════════════════════════════════════════
+// ADMIN PANEL
+// ══════════════════════════════════════════════
+window.showAdminPanel=async function(){
+  if(!currentUser?.isAdmin){toast('Akses ditolak!','error');return;}
+  openModal('adminModal');loadAdminStats();
+};
+document.querySelectorAll('[data-atab]').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('[data-atab]').forEach(x=>x.classList.remove('active'));t.classList.add('active');
+  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
+  const n=t.dataset.atab;document.getElementById(`admin${n.charAt(0).toUpperCase()+n.slice(1)}`).classList.add('active');
+  if(n==='users')loadAdminUsers();else if(n==='posts')loadAdminPosts();else if(n==='badges')loadAdminBadges();else loadAdminStats();
+});
+async function loadAdminStats(){
+  document.getElementById('adminStats').innerHTML='<div class="spin-wrap"><div class="spin-sm"></div>Loading...</div>';
+  showLoad();const d=await api('/api/admin/stats');hideLoad();
+  if(!d?.stats){document.getElementById('adminStats').innerHTML='<div class="empty"><h3>Gagal</h3></div>';return;}
+  const s=d.stats;
+  document.getElementById('adminStatsGrid').innerHTML=`
+    <div class="glass admin-card"><div class="admin-card-icon">👥</div><div class="admin-card-num">${s.totalUsers}</div><div class="admin-card-lbl">Total Users</div></div>
+    <div class="glass admin-card"><div class="admin-card-icon">📷</div><div class="admin-card-num">${s.totalPosts}</div><div class="admin-card-lbl">Total Posts</div></div>
+    <div class="glass admin-card"><div class="admin-card-icon">💬</div><div class="admin-card-num">${s.totalComments}</div><div class="admin-card-lbl">Komentar</div></div>
+    <div class="glass admin-card"><div class="admin-card-icon">💌</div><div class="admin-card-num">${s.totalMessages||0}</div><div class="admin-card-lbl">Pesan Chat</div></div>`;
+  document.getElementById('adminStats').innerHTML=`
+    <div style="padding:0 0 12px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+      <div style="padding:12px;border:1px solid var(--border-color);border-radius:14px;background:rgba(167,139,250,.05)"><span style="font-size:11px;color:var(--text-tertiary);font-weight:700">GAMBAR</span><div style="font-size:18px;font-weight:800;color:var(--text-primary);margin-top:3px">${s.totalImages||0}</div></div>
+      <div style="padding:12px;border:1px solid var(--border-color);border-radius:14px;background:rgba(167,139,250,.05)"><span style="font-size:11px;color:var(--text-tertiary);font-weight:700">VIDEO</span><div style="font-size:18px;font-weight:800;color:var(--text-primary);margin-top:3px">${s.totalVideos||0}</div></div>
+      <div style="padding:12px;border:1px solid var(--border-color);border-radius:14px;background:rgba(167,139,250,.05)"><span style="font-size:11px;color:var(--text-tertiary);font-weight:700">VERIFIED</span><div style="font-size:18px;font-weight:800;color:var(--text-primary);margin-top:3px">${s.totalVerified}</div></div>
+      <div style="padding:12px;border:1px solid var(--border-color);border-radius:14px;background:rgba(167,139,250,.05)"><span style="font-size:11px;color:var(--text-tertiary);font-weight:700">DEVELOPER</span><div style="font-size:18px;font-weight:800;color:var(--text-primary);margin-top:3px">${s.totalAdmins}</div></div>
+    </div></div>`;
+}
+async function loadAdminUsers(){
+  document.getElementById('adminUsers').innerHTML='<div class="spin-wrap"><div class="spin-sm"></div>Loading...</div>';
+  showLoad();const d=await api('/api/admin/users');hideLoad();
+  if(!d?.users){document.getElementById('adminUsers').innerHTML='<div class="empty"><h3>Gagal</h3></div>';return;}
+  let html='<div style="overflow-x:auto"><table class="admin-table"><thead><tr><th>User</th><th>Lv</th><th>Post</th><th>IP</th><th>Aksi</th></tr></thead><tbody>';
+  d.users.forEach(u=>{
+    const self=u.id===currentUser.id;
+    html+=`<tr><td><div class="admin-ucell"><img src="${safeImg(u.profilePic)}" alt="" loading="lazy"><strong>${escHtml(u.username)}</strong>${u.isVerified?'<span class="vbadge" style="width:13px;height:13px;font-size:8px">✓</span>':''}</div></td>
+      <td>${u.level||1}</td><td>${u.posts||0}</td>
+      <td style="font-size:10px;color:var(--text-tertiary)">${escHtml(u.registeredIp||'-')}</td>
+      <td style="white-space:nowrap">
+        <button class="admin-act av" onclick="adminVerify('${escHtml(u.id)}')">${u.isVerified?'✓Un':'✓Ver'}</button>
+        <button class="admin-act ad" onclick="adminDev('${escHtml(u.id)}')">${u.isAdmin?'–Dev':'+Dev'}</button>
+        <button class="admin-act bg" onclick="openAssignBadge('${escHtml(u.id)}')">🏷</button>
+        ${!self?`<button class="admin-act dl" onclick="promptDel('${escHtml(u.id)}','${escHtml(u.username)}')">🗑</button>`:'<button class="admin-act" disabled style="opacity:.3">🗑</button>'}
+      </td></tr>`;
+  });
+  html+='</tbody></table></div>';document.getElementById('adminUsers').innerHTML=html;
+}
+async function loadAdminPosts(){
+  document.getElementById('adminPosts').innerHTML='<div class="spin-wrap"><div class="spin-sm"></div>Loading...</div>';
+  showLoad();const d=await api('/api/admin/posts');hideLoad();
+  if(!d?.posts){document.getElementById('adminPosts').innerHTML='<div class="empty"><h3>Gagal</h3></div>';return;}
+  let html='';
+  d.posts.forEach(p=>{const su=safeUrl(p.mediaUrl)||'';html+=`<div class="admin-post-item"><div class="admin-thumb">${p.mediaType==='image'?`<img src="${escHtml(su)}" alt="" loading="lazy">`:`<video src="${escHtml(su)}" muted></video>`}</div><div class="admin-post-info"><strong>${escHtml(p.username)}</strong><div>${escHtml(p.caption?.substring(0,28)||'')}</div></div><button class="admin-del-btn" onclick="adminDelPost('${escHtml(p.id)}')">×</button></div>`;});
+  document.getElementById('adminPosts').innerHTML=html||'<div class="empty"><h3>Tidak ada post</h3></div>';
+}
+async function loadAdminBadges(){
+  document.getElementById('adminBadges').innerHTML='<div class="spin-wrap"><div class="spin-sm"></div>Loading...</div>';
+  showLoad();const d=await api('/api/admin/badges');hideLoad();
+  let html=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h4 style="color:var(--text-primary);font-size:15px">🏷️ Custom Badges</h4><button class="btn btn-success btn-sm" onclick="openAssignBadge()">➕ Buat</button></div><div class="badge-list">`;
+  if(!d?.badges?.length)html+='<div class="empty"><p>Belum ada badge</p></div>';
+  else d.badges.forEach(b=>{html+=`<div class="badge-card-item"><div style="display:flex;align-items:center;gap:10px"><div class="badge-icon-big">${escHtml(b.icon)}</div><div><div style="font-weight:700;color:var(--text-primary)">${escHtml(b.name)}</div><div style="font-size:11px;color:var(--accent);margin-top:1px">👤 ${escHtml(b.username||b.userId)}</div></div></div><button class="admin-del-btn" onclick="adminDelBadge('${escHtml(b.userId)}','${escHtml(b.name)}')">×</button></div>`;});
+  html+='</div>';document.getElementById('adminBadges').innerHTML=html;
+}
+window.adminVerify=async function(uid){
+  const d=await api('/api/admin/users');const u=d?.users?.find(x=>x.id===uid);
+  if(!confirm(u?.isVerified?'Cabut verifikasi?':'Verifikasi user ini?'))return;
+  showLoad();await api(`/api/admin/${u?.isVerified?'unverify':'verify'}/${uid}`,{method:'POST'});hideLoad();
+  loadAdminUsers();toast('Berhasil!','success');
+};
+window.adminDev=async function(uid){
+  const d=await api('/api/admin/users');const u=d?.users?.find(x=>x.id===uid);
+  if(!confirm(u?.isAdmin?'Cabut developer?':'Jadikan developer?'))return;
+  showLoad();await api(`/api/admin/${u?.isAdmin?'remove-admin':'make-admin'}/${uid}`,{method:'POST'});hideLoad();
+  loadAdminUsers();toast('Berhasil!','success');
+};
+window.adminDelPost=async function(pid){if(!confirm('Hapus postingan?'))return;showLoad();await api(`/api/admin/post/${pid}`,{method:'DELETE'});hideLoad();loadAdminPosts();if(currentView==='feed')renderFeed();};
+window.adminDelBadge=async function(uid,name){if(!confirm(`Hapus badge "${name}"?`))return;showLoad();const r=await api('/api/admin/remove-badge',{method:'POST',body:JSON.stringify({userId:uid,badgeName:name})});hideLoad();if(r?.success){toast('Badge dihapus!','success');loadAdminBadges();}};
+window.openAssignBadge=function(uid=''){
+  document.getElementById('badgeUserId').value=uid;
+  document.getElementById('badgeName').value='';
+  document.getElementById('badgeIcon').value='🏷️';
+  updateBadgePrev();openModal('assignBadgeModal');
+};
+function updateBadgePrev(){
+  const n=document.getElementById('badgeName').value||'Nama Badge';
+  const ic=document.getElementById('badgeIcon').value||'🏷️';
+  const col=document.getElementById('badgeColor').value;
+  const el=document.getElementById('badgePrevChip');
+  el.textContent=`${ic} ${n}`;el.style.background=`${col}20`;el.style.color=col;el.style.border=`1px solid ${col}`;
+}
+document.getElementById('badgeName').oninput=updateBadgePrev;
+document.getElementById('badgeIcon').oninput=updateBadgePrev;
+document.getElementById('badgeColor').onchange=updateBadgePrev;
+document.getElementById('confirmBadgeBtn').onclick=async()=>{
+  const uid=document.getElementById('badgeUserId').value.trim();
+  const name=document.getElementById('badgeName').value.trim();
+  const icon=document.getElementById('badgeIcon').value.trim();
+  const color=document.getElementById('badgeColor').value;
+  if(!uid||!name){toast('User ID dan nama badge wajib!','warning');return;}
+  if(isSubmitting)return;isSubmitting=true;showLoad();
+  const r=await api('/api/admin/assign-badge',{method:'POST',body:JSON.stringify({userId:uid,badgeName:name,badgeIcon:icon,badgeColor:color})});
+  hideLoad();isSubmitting=false;
+  if(r?.success){toast('Badge berhasil di-assign! 🎖️','success');closeModal('assignBadgeModal');loadAdminBadges();}
+  else toast(r?.error||'Gagal','error');
+};
+window.promptDel=function(uid,uname){
+  document.getElementById('delUserId').value=uid;
+  document.getElementById('delUserName').textContent='@'+uname;
+  openModal('deleteUserModal');
+};
+document.getElementById('confirmDelUserBtn').onclick=async()=>{
+  const uid=document.getElementById('delUserId').value;
+  if(!uid||isSubmitting)return;
+  closeModal('deleteUserModal');isSubmitting=true;showLoad();
+  const r=await apiRaw(`/api/admin/user/${uid}`,{method:'DELETE'});
+  hideLoad();isSubmitting=false;
+  if(r?.success){toast('✅ '+r.message,'success');loadAdminUsers();}
+  else toast('❌ '+(r?.error||'Gagal'),'error');
+};
+
+// ══════════════════════════════════════════════
+// LOGOUT
+// ══════════════════════════════════════════════
+document.getElementById('logoutBtn').onclick=async()=>{
+  showLoad();await api('/api/logout',{method:'POST'});
+  document.cookie='rememberToken=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  hideLoad();stopChatPoll();renderAuth();
+};
+
+// ══════════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════════
+document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>navigate(b.dataset.view));
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+initWallUI();
+window.onload=async()=>{await loadUser();};
+</script>
+</body>
+</html>
